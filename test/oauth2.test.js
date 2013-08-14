@@ -65,4 +65,10 @@ describe('OAuth2Strategy', function() {
     }).to.throw(TypeError, 'OAuth2Strategy requires a clientSecret option');
   });
   
+  it('should throw if constructed with only a verify callback', function() {
+    expect(function() {
+      new OAuth2Strategy(function() {});
+    }).to.throw(TypeError, 'OAuth2Strategy requires a authorizationURL option');
+  });
+  
 });
