@@ -14,7 +14,8 @@ describe('AuthorizationError', function() {
     });
     
     it('should format correctly', function() {
-      expect(err.toString()).to.equal('AuthorizationError');
+      //expect(err.toString()).to.equal('AuthorizationError');
+      expect(err.toString().indexOf('AuthorizationError')).to.equal(0);
     });
   });
   
