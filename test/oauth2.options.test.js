@@ -236,7 +236,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
-    describe('handling a request from behind a secure proxy to be redirected for authorization', function() {
+    describe('handling a request to be redirected for authorization from behind a secure proxy that is trusted by app', function() {
       var url;
   
       before(function(done) {
@@ -246,6 +246,12 @@ describe('OAuth2Strategy', function() {
             done();
           })
           .req(function(req) {
+            req.app = {
+              get: function(name) {
+                return name == 'trust proxy' ? true : false;
+              }
+            }
+            
             req.url = '/auth/example';
             req.headers.host = 'www.example.net';
             req.headers['x-forwarded-proto'] = 'https';
@@ -259,6 +265,94 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    describe('handling a request to be redirected for authorization from behind a secure proxy that sets x-forwarded-host that is trusted by app', function() {
+      var url;
+  
+      before(function(done) {
+        chai.passport(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            req.app = {
+              get: function(name) {
+                return name == 'trust proxy' ? true : false;
+              }
+            }
+            
+            req.url = '/auth/example';
+            req.headers.host = 'server.internal';
+            req.headers['x-forwarded-proto'] = 'https';
+            req.headers['x-forwarded-host'] = 'www.example.net';
+            req.connection = {};
+          })
+          .authenticate();
+      });
+  
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+      });
+    });
+    
+    describe('handling a request to be redirected for authorization that contains untrusted x-forwarded-proto header', function() {
+      var url;
+
+      before(function(done) {
+        chai.passport(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            req.app = {
+              get: function(name) {
+                return name == 'trust proxy' ? false : false;
+              }
+            }
+          
+            req.url = '/auth/example';
+            req.headers.host = 'www.example.net';
+            req.headers['x-forwarded-proto'] = 'https';
+            req.connection = {};
+          })
+          .authenticate();
+      });
+
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+      });
+    });
+
+    describe('handling a request to be redirected for authorization that contains untrusted x-forwarded-host header', function() {
+      var url;
+
+      before(function(done) {
+        chai.passport(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            req.app = {
+              get: function(name) {
+                return name == 'trust proxy' ? false : false;
+              }
+            }
+          
+            req.url = '/auth/example';
+            req.headers.host = 'server.internal';
+            req.headers['x-forwarded-proto'] = 'https';
+            req.headers['x-forwarded-host'] = 'www.example.net';
+            req.connection = {};
+          })
+          .authenticate();
+      });
+
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fserver.internal%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+      });
+    });
   });
   
 });
