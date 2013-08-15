@@ -33,7 +33,8 @@
   "main": "./lib",
   "dependencies": {
     "passport-strategy": "1.x.x",
-    "oauth": "0.9.x"
+    "oauth": "0.9.x",
+    "uid2": "0.0.x"
   },
   "devDependencies": {
     "mocha": "1.x.x",
