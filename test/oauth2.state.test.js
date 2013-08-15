@@ -31,6 +31,72 @@ describe('OAuth2Strategy', function() {
         callback(null, 'wrong-access-token', 'wrong-refresh-token');
       }
     }
+    
+    describe('handling an authorized return request with correct state', function() {
+      var request
+        , user
+        , info;
+  
+      before(function(done) {
+        chai.passport(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+            req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+          })
+          .authenticate();
+      });
+  
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+  
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+      
+      it('should remove state from session', function() {
+        expect(request.session['oauth2:www.example.com']).to.be.undefined;
+      });
+    });
+    
+    describe('handling an authorized return request without session', function() {
+      var request
+        , err;
+  
+      before(function(done) {
+        chai.passport(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+          })
+          .authenticate();
+      });
+  
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('OAuth2Strategy requires session support when using state. Did you forget app.use(express.session(...))?');
+      });
+    });
   
     describe('handling a request to be redirected for authorization', function() {
       var request, url;
@@ -62,7 +128,7 @@ describe('OAuth2Strategy', function() {
     });
     
     describe('handling a request without session to be redirected for authorization', function() {
-      var request, url;
+      var request, err;
   
       before(function(done) {
         chai.passport(strategy)
