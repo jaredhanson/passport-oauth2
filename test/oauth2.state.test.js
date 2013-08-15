@@ -72,6 +72,99 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    describe('handling an authorized return request with incorrect state', function() {
+      var request
+        , info, status;
+  
+      before(function(done) {
+        chai.passport(strategy)
+          .fail(function(i, s) {
+            info = i;
+            status = s;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK-WRONG';
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+            req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+          })
+          .authenticate();
+      });
+  
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Cross-site request forgery detected.');
+      });
+      
+      it('should supply status', function() {
+        expect(status).to.equal(403);
+      });
+      
+      it('should remove state from session', function() {
+        expect(request.session['oauth2:www.example.com']).to.be.undefined;
+      });
+    });
+    
+    describe('handling an authorized return request with session that lacks key', function() {
+      var request
+        , err;
+  
+      before(function(done) {
+        chai.passport(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+            req.session = {};
+          })
+          .authenticate();
+      });
+  
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('Failed to find state in session');
+      });
+    });
+    
+    describe('handling an authorized return request with session that has key but no state', function() {
+      var request
+        , err;
+  
+      before(function(done) {
+        chai.passport(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+          })
+          .authenticate();
+      });
+  
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('Failed to find state in session');
+      });
+    });
+    
     describe('handling an authorized return request without session', function() {
       var request
         , err;
