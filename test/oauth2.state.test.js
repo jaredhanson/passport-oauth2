@@ -5,6 +5,8 @@ var chai = require('chai')
 
 describe('OAuth2Strategy', function() {
     
+  // WIP: Add test cases for state and sessionKey options
+    
   describe('with state checking enabled', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -98,7 +100,7 @@ describe('OAuth2Strategy', function() {
   
       it('should supply info', function() {
         expect(info).to.be.an.object;
-        expect(info.message).to.equal('Cross-site request forgery detected.');
+        expect(info.message).to.equal('Invalid authorization request state.');
       });
       
       it('should supply status', function() {
@@ -112,12 +114,13 @@ describe('OAuth2Strategy', function() {
     
     describe('handling an authorized return request with session that lacks key', function() {
       var request
-        , err;
+        , info, status;
   
       before(function(done) {
         chai.passport(strategy)
-          .error(function(e) {
-            err = e;
+          .fail(function(i, s) {
+            info = i;
+            status = s;
             done();
           })
           .req(function(req) {
@@ -131,20 +134,25 @@ describe('OAuth2Strategy', function() {
           .authenticate();
       });
   
-      it('should error', function() {
-        expect(err).to.be.an.instanceof(Error)
-        expect(err.message).to.equal('Failed to find state in session');
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Unable to verify authorization request state.');
+      });
+      
+      it('should supply status', function() {
+        expect(status).to.equal(403);
       });
     });
     
     describe('handling an authorized return request with session that has key but no state', function() {
       var request
-        , err;
+        , info, status;
   
       before(function(done) {
         chai.passport(strategy)
-          .error(function(e) {
-            err = e;
+          .fail(function(i, s) {
+            info = i;
+            status = s;
             done();
           })
           .req(function(req) {
@@ -159,9 +167,13 @@ describe('OAuth2Strategy', function() {
           .authenticate();
       });
   
-      it('should error', function() {
-        expect(err).to.be.an.instanceof(Error)
-        expect(err.message).to.equal('Failed to find state in session');
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Unable to verify authorization request state.');
+      });
+      
+      it('should supply status', function() {
+        expect(status).to.equal(403);
       });
     });
     
