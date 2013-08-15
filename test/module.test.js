@@ -9,7 +9,7 @@ describe('passport-oauth2', function() {
   
   it('should export Error constructors', function() {
     expect(strategy.AuthorizationError).to.be.a('function');
-    expect(strategy.AccessTokenError).to.be.a('function');
+    expect(strategy.TokenError).to.be.a('function');
     expect(strategy.InternalOAuthError).to.be.a('function');
   });
   

@@ -1,6 +1,6 @@
 var chai = require('chai')
   , OAuth2Strategy = require('../lib/strategy')
-  , AccessTokenError = require('../lib/errors/accesstokenerror')
+  , TokenError = require('../lib/errors/tokenerror')
   , InternalOAuthError = require('../lib/errors/internaloautherror');
 
 
@@ -88,7 +88,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should error', function() {
-        expect(err).to.be.an.instanceof(AccessTokenError)
+        expect(err).to.be.an.instanceof(TokenError)
         expect(err.message).to.equal('The provided value for the input parameter \'code\' is not valid.');
         expect(err.code).to.equal('invalid_grant');
         expect(err.oauthError).to.be.undefined;

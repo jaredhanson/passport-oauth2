@@ -1,10 +1,10 @@
-var AccessTokenError = require('../../lib/errors/accesstokenerror');
+var TokenError = require('../../lib/errors/tokenerror');
 
 
-describe('AccessTokenError', function() {
+describe('TokenError', function() {
     
   describe('constructed without a message', function() {
-    var err = new AccessTokenError();
+    var err = new TokenError();
     
     it('should have default properties', function() {
       expect(err.message).to.be.undefined;
@@ -15,12 +15,12 @@ describe('AccessTokenError', function() {
     
     it('should format correctly', function() {
       //expect(err.toString()).to.equal('AuthorizationError');
-      expect(err.toString().indexOf('AccessTokenError')).to.equal(0);
+      expect(err.toString().indexOf('TokenError')).to.equal(0);
     });
   });
   
   describe('constructed with a message', function() {
-    var err = new AccessTokenError('Mismatched return URI');
+    var err = new TokenError('Mismatched return URI');
     
     it('should have default properties', function() {
       expect(err.message).to.equal('Mismatched return URI');
@@ -30,12 +30,12 @@ describe('AccessTokenError', function() {
     });
     
     it('should format correctly', function() {
-      expect(err.toString()).to.equal('AccessTokenError: Mismatched return URI');
+      expect(err.toString()).to.equal('TokenError: Mismatched return URI');
     });
   });
   
   describe('constructed with a message, code, uri and status', function() {
-    var err = new AccessTokenError('Unsupported grant type: foo', 'unsupported_grant_type', 'http://www.example.com/oauth/help', 501);
+    var err = new TokenError('Unsupported grant type: foo', 'unsupported_grant_type', 'http://www.example.com/oauth/help', 501);
     
     it('should have default properties', function() {
       expect(err.message).to.equal('Unsupported grant type: foo');
@@ -45,7 +45,7 @@ describe('AccessTokenError', function() {
     });
     
     it('should format correctly', function() {
-      expect(err.toString()).to.equal('AccessTokenError: Unsupported grant type: foo');
+      expect(err.toString()).to.equal('TokenError: Unsupported grant type: foo');
     });
   });
   
