@@ -60,10 +60,10 @@ For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
     app.get('/auth/example',
-      passport.authenticate('oauth'));
+      passport.authenticate('oauth2'));
 
     app.get('/auth/example/callback',
-      passport.authenticate('oauth', { failureRedirect: '/login' }),
+      passport.authenticate('oauth2', { failureRedirect: '/login' }),
       function(req, res) {
         // Successful authentication, redirect home.
         res.redirect('/');
