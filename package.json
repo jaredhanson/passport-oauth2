@@ -12,17 +12,17 @@
     "oauth",
     "oauth2"
   ],
+  "author": {
+    "name": "Jared Hanson",
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/jaredhanson/passport-oauth2.git"
   },
   "bugs": {
     "url": "http://github.com/jaredhanson/passport-oauth2/issues"
-  },
-  "author": {
-    "name": "Jared Hanson",
-    "email": "jaredhanson@gmail.com",
-    "url": "http://www.jaredhanson.net/"
   },
   "licenses": [
     {
@@ -41,19 +41,10 @@
     "chai": "1.x.x",
     "chai-passport-strategy": "0.2.x"
   },
-  "engines": { "node": ">= 0.4.0" },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
   "scripts": {
     "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js test/**/*.test.js"
-  },
-  "testling": {
-    "browsers": [
-      "chrome/latest"
-    ],
-    "harness" : "mocha",
-    "files": [
-      "test/bootstrap/testling.js",
-      "test/*.test.js",
-      "test/**/*.test.js"
-    ]
   }
 }
