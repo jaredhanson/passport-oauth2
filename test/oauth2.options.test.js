@@ -46,7 +46,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=email&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=email&client_id=ABC123');
       });
     });
   });
@@ -93,7 +93,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=permission_1%2Cpermission_2&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=permission_1%2Cpermission_2&client_id=ABC123');
       });
     });
   });
@@ -210,7 +210,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
   
@@ -232,7 +232,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
   
@@ -261,7 +261,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
   
@@ -291,7 +291,7 @@ describe('OAuth2Strategy', function() {
       });
   
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
     
@@ -320,7 +320,7 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
 
@@ -350,7 +350,7 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fserver.internal%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fserver.internal%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
   });
@@ -405,7 +405,7 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
 
@@ -429,7 +429,7 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should be redirected', function() {
-        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123&type=web_server');
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     });
   });
