@@ -38,7 +38,7 @@ describe('OAuth2Strategy', function() {
         , info;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .success(function(u, i) {
             user = u;
             info = i;

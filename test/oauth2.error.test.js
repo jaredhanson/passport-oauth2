@@ -31,7 +31,7 @@ describe('OAuth2Strategy', function() {
       var err;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .error(function(e) {
             err = e;
             done();
@@ -75,7 +75,7 @@ describe('OAuth2Strategy', function() {
       var err;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .error(function(e) {
             err = e;
             done();
@@ -120,7 +120,7 @@ describe('OAuth2Strategy', function() {
       var err;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .error(function(e) {
             err = e;
             done();
@@ -165,7 +165,7 @@ describe('OAuth2Strategy', function() {
       var err;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .error(function(e) {
             err = e;
             done();
@@ -212,7 +212,7 @@ describe('OAuth2Strategy', function() {
       var err;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .error(function(e) {
             err = e;
             done();
@@ -257,7 +257,7 @@ describe('OAuth2Strategy', function() {
       var err;
   
       before(function(done) {
-        chai.passport(strategy)
+        chai.passport.use(strategy)
           .error(function(e) {
             err = e;
             done();
