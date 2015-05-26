@@ -21,6 +21,8 @@ describe('OAuth2Strategy', function() {
         return done(null, { id: '2234' }, { message: 'Hello' });
       } else if (accessToken == '2YotnFZFEjr1zCsicMWpAA+ALT2' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA+ALT2') {
         return done(null, { id: '3234' }, { message: 'Hello' });
+      } else if (accessToken == '2YotnFZFEjr1zCsicMWpAA+postmessage' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA+postmessage') {
+        return done(null, { id: '3234' }, { message: 'Hello' });
       }
       return done(null, false);
     });
@@ -35,6 +37,8 @@ describe('OAuth2Strategy', function() {
       return callback(null, '2YotnFZFEjr1zCsicMWpAA+ALT1', 'tGzv3JOkF0XG5Qx2TlKWIA+ALT1', { token_type: 'example' });
     } else if (code == 'SplxlOBeZQQYbYS6WxSbIA+ALT2' && options.redirect_uri == 'https://www.example.net/auth/example/callback/alt2') {
       return callback(null, '2YotnFZFEjr1zCsicMWpAA+ALT2', 'tGzv3JOkF0XG5Qx2TlKWIA+ALT2', { token_type: 'example' });
+    } else if (code == 'SplxlOBeZQQYbYS6WxSbIA+postmessage' && options.redirect_uri == 'postmessage') {
+      return callback(null, '2YotnFZFEjr1zCsicMWpAA+postmessage', 'tGzv3JOkF0XG5Qx2TlKWIA+postmessage', { token_type: 'example' });
     } else {
       return callback(null, 'wrong-access-token', 'wrong-refresh-token');
     }
@@ -117,6 +121,38 @@ describe('OAuth2Strategy', function() {
           req.connection = { encrypted: true };
         })
         .authenticate({ callbackURL: '/auth/example/callback/alt2' });
+    });
+
+    it('should supply user', function() {
+      expect(user).to.be.an.object;
+      expect(user.id).to.equal('3234');
+    });
+
+    it('should supply info', function() {
+      expect(info).to.be.an.object;
+      expect(info.message).to.equal('Hello');
+    });
+  });
+
+  describe('handling an authorized return request with postmessage callbackURL option', function() {
+    var user
+      , info;
+
+    before(function(done) {
+      chai.passport.use(strategy)
+        .success(function(u, i) {
+          user = u;
+          info = i;
+          done();
+        })
+        .req(function(req) {
+          req.url = '/auth/example/callback';
+          req.headers.host = 'www.example.net';
+          req.query = {};
+          req.query.code = 'SplxlOBeZQQYbYS6WxSbIA+postmessage';
+          req.connection = { encrypted: true };
+        })
+        .authenticate({ callbackURL: 'postmessage' });
     });
 
     it('should supply user', function() {
