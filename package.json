@@ -40,7 +40,8 @@
   "devDependencies": {
     "mocha": "2.x.x",
     "chai": "2.x.x",
-    "chai-passport-strategy": "0.2.x"
+    "chai-passport-strategy": "0.2.x",
+    "proxyquire": "1.x.x"
   },
   "engines": {
     "node": ">= 0.4.0"
