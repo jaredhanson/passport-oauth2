@@ -32,8 +32,9 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "passport-strategy": "1.x.x",
+    "base64url": "^1.0.4",
     "oauth": "0.9.x",
+    "passport-strategy": "1.x.x",
     "uid2": "0.0.x"
   },
   "devDependencies": {
