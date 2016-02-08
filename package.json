@@ -25,6 +25,12 @@
     "url": "http://github.com/jaredhanson/passport-oauth2/issues"
   },
   "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
   "main": "./lib",
   "dependencies": {
     "passport-strategy": "1.x.x",
@@ -32,9 +38,10 @@
     "uid2": "0.0.x"
   },
   "devDependencies": {
+    "make-node": "0.3.x",
     "mocha": "2.x.x",
     "chai": "2.x.x",
-    "chai-passport-strategy": "0.2.x"
+    "chai-passport-strategy": "1.x.x"
   },
   "engines": {
     "node": ">= 0.4.0"
