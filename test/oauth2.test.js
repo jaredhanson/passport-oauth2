@@ -65,7 +65,7 @@ describe('OAuth2Strategy', function() {
           }, function() {});
         }).to.throw(TypeError, 'OAuth2Strategy requires a clientID option');
       });
-    }); // without a tokenURL option
+    }); // without a clientID option
     
     describe('without a clientSecret option', function() {
       it('should throw', function() {
@@ -77,7 +77,7 @@ describe('OAuth2Strategy', function() {
           }, function() {});
         }).to.throw(TypeError, 'OAuth2Strategy requires a clientSecret option');
       });
-    }); // without a tokenURL option
+    }); // without a clientSecret option
     
     describe('with only a verify callback', function() {
       it('should throw', function() {
@@ -85,7 +85,7 @@ describe('OAuth2Strategy', function() {
           new OAuth2Strategy(function() {});
         }).to.throw(TypeError, 'OAuth2Strategy requires a authorizationURL option');
       });
-    }); // without a tokenURL option
+    }); // with only a verify callback
     
   }); // constructed
   
