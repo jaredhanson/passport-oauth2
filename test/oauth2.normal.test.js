@@ -130,6 +130,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('handling a request to be redirected for authorization', function() {
     var url;
   
@@ -149,6 +150,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('handling a request to be redirected for authorization with scope option', function() {
     var url;
   
@@ -168,6 +170,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('handling a request to be redirected for authorization with scope option as array', function() {
     var url;
   
@@ -187,6 +190,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('handling a request to be redirected for authorization with callbackURL option', function() {
     var url;
   
@@ -206,6 +210,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('handling a request to be redirected for authorization with relative callbackURL option', function() {
     var url;
   
