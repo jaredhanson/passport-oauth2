@@ -1,4 +1,5 @@
 var OAuth2Strategy = require('../lib/strategy')
+  , AuthorizationError = require('../lib/errors/authorizationerror')
   , chai = require('chai');
 
 
@@ -493,6 +494,264 @@ describe('OAuth2Strategy', function() {
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved with relative redirect URI option
+    
+    describe('that fails due to verify callback supplying false', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        return done(null, false);
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      
+      var info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i) {
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should not supply info', function() {
+        expect(info).to.be.undefined;
+      });
+    }); // that fails due to verify callback supplying false
+    
+    describe('that fails due to verify callback supplying false with additional info', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        return done(null, false, { message: 'Invite required' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      
+      var info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i) {
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Invite required');
+      });
+    }); // that fails due to verify callback supplying false with additional info
+    
+    describe('that was denied', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i) {
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.error = 'access_denied';
+          })
+          .authenticate();
+      });
+
+      it('should fail without message', function() {
+        expect(info).to.not.be.undefined;
+        expect(info.message).to.be.undefined;
+      });
+    }); // that was denied
+    
+    describe('that was denied with description', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i) {
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.error = 'access_denied';
+            req.query.error_description = 'Why oh why?';
+          })
+          .authenticate();
+      });
+
+      it('should fail with message', function() {
+        expect(info).to.not.be.undefined;
+        expect(info.message).to.equal('Why oh why?');
+      });
+    }); // that was denied with description
+    
+    describe('that was returned with an error without description', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      
+      var err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.error = 'invalid_scope';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(AuthorizationError)
+        expect(err.message).to.be.undefined;
+        expect(err.code).to.equal('invalid_scope');
+        expect(err.uri).to.be.undefined;
+        expect(err.status).to.equal(500);
+      });
+    }); // that was returned with an error without description
+    
+    describe('that was returned with an error with description', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      
+      var err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.error = 'invalid_scope';
+            req.query.error_description = 'The scope is invalid';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(AuthorizationError)
+        expect(err.message).to.equal('The scope is invalid');
+        expect(err.code).to.equal('invalid_scope');
+        expect(err.uri).to.be.undefined;
+        expect(err.status).to.equal(500);
+      });
+    }); // that was returned with an error with description
+    
+    describe('that was returned with an error with description and link', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      
+      var err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.error = 'invalid_scope';
+            req.query.error_description = 'The scope is invalid';
+            req.query.error_uri = 'http://www.example.com/oauth2/help';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(AuthorizationError)
+        expect(err.message).to.equal('The scope is invalid');
+        expect(err.code).to.equal('invalid_scope');
+        expect(err.uri).to.equal('http://www.example.com/oauth2/help');
+        expect(err.status).to.equal(500);
+      });
+    }); // that was returned with an error with description and link
     
   }); // processing response to authorization request
   
