@@ -257,7 +257,7 @@ describe('OAuth2Strategy', function() {
             done();
           })
           .req(function(req) {
-            req.url = '/auth/example';
+            req.url = '/auth/example/callback/alt2';
             req.headers.host = 'www.example.net';
             req.connection = { encrypted: true };
           })
@@ -270,5 +270,230 @@ describe('OAuth2Strategy', function() {
     }); // that redirects to service provider with relative redirect URI option
     
   }); // issuing authorization request
+  
+  
+  describe('processing response to authorization request', function() {
+    
+    describe('that was approved without redirect URI', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret'
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+        if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+    
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        console.log(options)
+        
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== undefined) { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    }); // that was approved without redirect URI
+    
+    describe('that was approved with redirect URI', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+        if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+    
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    }); // that was approved with redirect URI
+    
+    describe('that was approved with redirect URI option', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+        if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+    
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback/alt1') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate({ callbackURL: 'https://www.example.net/auth/example/callback/alt1' });
+      });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    }); // that was approved with redirect URI option
+    
+    describe('that was approved with relative redirect URI option', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+        if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+    
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback/alt2') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.url = '/auth/example/callback/alt2';
+            req.headers.host = 'www.example.net';
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.connection = { encrypted: true };
+          })
+          .authenticate({ callbackURL: '/auth/example/callback/alt2' });
+      });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    }); // that was approved with relative redirect URI option
+    
+  }); // processing response to authorization request
   
 });
