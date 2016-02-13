@@ -292,8 +292,6 @@ describe('OAuth2Strategy', function() {
       });
       
       strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
-        console.log(options)
-        
         if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
         if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
         if (options.redirect_uri !== undefined) { return callback(new Error('incorrect options.redirect_uri argument')); }

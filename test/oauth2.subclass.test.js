@@ -16,31 +16,33 @@ describe('OAuth2Strategy subclass', function() {
       return { type: options.type };
     }
     
+    
     describe('subclass that overrides tokenParams function', function() {
       var strategy = new FooOAuth2Strategy({
-          authorizationURL: 'https://www.example.com/oauth2/authorize',
-          tokenURL: 'https://www.example.com/oauth2/token',
-          clientID: 'ABC123',
-          clientSecret: 'secret',
-          callbackURL: 'https://www.example.net/auth/example/callback',
-        },
-        function(accessToken, refreshToken, profile, done) {
-          if (accessToken == '2YotnFZFEjr1zCsicMWpAA' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA') { 
-            return done(null, { id: '1234' }, { message: 'Hello' });
-          }
-          return done(null, false);
-        });
-  
-      // inject a "mock" oauth2 instance
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
       strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
-        if (code == 'SplxlOBeZQQYbYS6WxSbIA' && options.grant_type == 'authorization_code' && options.redirect_uri == 'https://www.example.net/auth/example/callback' && options.type == 'web_server') {
-          callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
-        } else {
-          callback(null, 'wrong-access-token', 'wrong-refresh-token');
-        }
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        if (options.type !== 'web_server') { return callback(new Error('incorrect options.type argument')); }
+        
+        callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
       }
-  
-      describe('handling an authorized return request', function() {
+      
+      
+      describe('processing response to authorization request that was approved', function() {
         var user
           , info;
   
