@@ -17,7 +17,7 @@ describe('OAuth2Strategy subclass', function() {
     }
     
     
-    describe('subclass that overrides tokenParams function', function() {
+    describe('processing response to authorization request that was approved', function() {
       var strategy = new FooOAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
         tokenURL: 'https://www.example.com/oauth2/token',
@@ -42,35 +42,33 @@ describe('OAuth2Strategy subclass', function() {
       }
       
       
-      describe('processing response to authorization request that was approved', function() {
-        var user
-          , info;
+      var user
+        , info;
   
-        before(function(done) {
-          chai.passport.use(strategy)
-            .success(function(u, i) {
-              user = u;
-              info = i;
-              done();
-            })
-            .req(function(req) {
-              req.query = {};
-              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
-            })
-            .authenticate({ type: 'web_server' });
-        });
-  
-        it('should supply user', function() {
-          expect(user).to.be.an.object;
-          expect(user.id).to.equal('1234');
-        });
-  
-        it('should supply info', function() {
-          expect(info).to.be.an.object;
-          expect(info.message).to.equal('Hello');
-        });
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate({ type: 'web_server' });
       });
-    });
-  });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    }); // processing response to authorization request that was approved
+  }); // that overrides tokenParams
   
 });
