@@ -6,6 +6,76 @@ var OAuth2Strategy = require('../lib/strategy')
 
 describe('OAuth2Strategy subclass', function() {
   
+  describe('that overrides authorizationParams', function() {
+    function FooOAuth2Strategy(options, verify) {
+      OAuth2Strategy.call(this, options, verify);
+    }
+    util.inherits(FooOAuth2Strategy, OAuth2Strategy);
+
+    FooOAuth2Strategy.prototype.authorizationParams = function(options) {
+      return { prompt: options.prompt };
+    }
+    
+    
+    describe('issuing authorization request that redirects to service provider', function() {
+      var strategy = new FooOAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+    
+  
+      describe('with prompt', function() {
+        var url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+            })
+            .authenticate({ prompt: 'mobile' });
+        });
+  
+        it('should be redirected', function() {
+          expect(url).to.equal('https://www.example.com/oauth2/authorize?prompt=mobile&response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+        });
+      }); // with prompt
+    
+      describe('with scope and prompt', function() {
+        var url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+            })
+            .authenticate({ scope: 'email', prompt: 'mobile' });
+        });
+  
+        it('should be redirected', function() {
+          expect(url).to.equal('https://www.example.com/oauth2/authorize?prompt=mobile&response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=email&client_id=ABC123');
+        });
+      }); // with scope and prompt
+    
+    }); // issuing authorization request that redirects to service provider
+    
+  }); // that overrides authorizationParams
+  
+  
   describe('that overrides tokenParams', function() {
     function FooOAuth2Strategy(options, verify) {
       OAuth2Strategy.call(this, options, verify);
@@ -69,6 +139,7 @@ describe('OAuth2Strategy subclass', function() {
         expect(info.message).to.equal('Hello');
       });
     }); // processing response to authorization request that was approved
+    
   }); // that overrides tokenParams
   
 });
