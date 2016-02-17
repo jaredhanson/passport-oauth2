@@ -245,6 +245,7 @@ describe('OAuth2Strategy subclass', function() {
         expect(err.oauthError.data).to.equal('Invalid code');
       });
     }); // and throws exception
-  });
+    
+  }); // that overrides parseErrorResponse
   
 });

@@ -20,6 +20,7 @@ describe('OAuth2Strategy', function() {
     
   describe('subclass that overrides userProfile function', function() {
     
+    // OK
     describe('with default options', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
