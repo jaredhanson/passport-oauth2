@@ -12,10 +12,11 @@ describe('OAuth2Strategy subclass', function() {
     util.inherits(FooOAuth2Strategy, OAuth2Strategy);
 
     FooOAuth2Strategy.prototype.userProfile = function(accessToken, done) {
-      if (accessToken == '2YotnFZFEjr1zCsicMWpAA') {
-        return done(null, { username: 'jaredhanson', location: 'Oakland, CA' });
-      }
-      return done(new Error('failed to load user profile'));
+      if (accessToken === '666') { return done(new Error('something went wrong loading user profile')); }
+      
+      if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+      
+      return done(null, { username: 'jaredhanson', location: 'Oakland, CA' });
     }
     
     
@@ -72,6 +73,48 @@ describe('OAuth2Strategy subclass', function() {
         expect(info.message).to.equal('Hello');
       });
     }); // fetching user profile
+    
+    describe('error fetching user profile', function() {
+      var strategy = new FooOAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {
+        return done(new Error('verify callback should not be called'));
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '666', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+  
+  
+      var err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('something went wrong loading user profile');
+      });
+    }); // error fetching user profile
     
   }); // that overrides userProfile
   

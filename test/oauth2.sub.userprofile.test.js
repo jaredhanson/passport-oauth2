@@ -21,7 +21,7 @@ describe('OAuth2Strategy', function() {
   describe('subclass that overrides userProfile function', function() {
     
     // OK
-    describe('with default options', function() {
+    describe.skip('with default options', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
           tokenURL: 'https://www.example.com/oauth2/token',
@@ -47,7 +47,8 @@ describe('OAuth2Strategy', function() {
         }
       }
   
-      describe('handling an authorized return request', function() {
+      // OK
+      describe.skip('handling an authorized return request', function() {
         var user
           , info;
   
@@ -81,7 +82,8 @@ describe('OAuth2Strategy', function() {
         });
       });
     
-      describe('failing to load user profile', function() {
+      // OK
+      describe.skip('failing to load user profile', function() {
         var err;
   
         before(function(done) {
