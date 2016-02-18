@@ -106,7 +106,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
-  
+    // OK
     describe('with skip profile option set to true', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -168,7 +168,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
-  
+    // OK
     describe('with skip profile function that synchronously returns false', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -233,7 +233,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
-  
+    // OK
     describe('with skip profile function that synchronously returns true', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -297,7 +297,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
-  
+    // OK
     describe('with skip profile function that asynchronously returns false', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -363,7 +363,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
-  
+    // OK
     describe('with skip profile function that asynchronously returns true', function() {
       var strategy = new MockOAuth2Strategy({
           authorizationURL: 'https://www.example.com/oauth2/authorize',
