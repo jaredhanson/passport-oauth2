@@ -1,5 +1,7 @@
 var OAuth2Strategy = require('../lib/strategy')
   , AuthorizationError = require('../lib/errors/authorizationerror')
+  , TokenError = require('../lib/errors/tokenerror')
+  , InternalOAuthError = require('../lib/errors/internaloautherror')
   , chai = require('chai');
 
 
@@ -918,6 +920,165 @@ describe('OAuth2Strategy', function() {
         expect(err.status).to.equal(500);
       });
     }); // that was returned with an error with description and link
+    
+    describe('that errors due to token request error', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        return done(new Error('verify callback should not be called'));
+      });
+  
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback(new Error('something went wrong'));
+      }
+  
+  
+      var err;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(InternalOAuthError)
+        expect(err.message).to.equal('Failed to obtain access token');
+        expect(err.oauthError.message).to.equal('something went wrong');
+      });
+    }); // that errors due to token request error
+    
+    describe('that errors due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        return done(new Error('verify callback should not be called'));
+      });
+  
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback({ statusCode: 400, data: '{"error":"invalid_grant","error_description":"The provided value for the input parameter \'code\' is not valid."} '});
+      }
+  
+  
+      var err;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(TokenError)
+        expect(err.message).to.equal('The provided value for the input parameter \'code\' is not valid.');
+        expect(err.code).to.equal('invalid_grant');
+        expect(err.oauthError).to.be.undefined;
+      });
+    }); // that errors due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body
+    
+    describe('that errors due to token request error, in node-oauth object literal form with JSON body', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        return done(new Error('verify callback should not be called'));
+      });
+  
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback({ statusCode: 400, data: '{"error_code":"invalid_grant"}'});
+      }
+  
+  
+      var err;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(InternalOAuthError)
+        expect(err.message).to.equal('Failed to obtain access token');
+        expect(err.oauthError.statusCode).to.equal(400);
+        expect(err.oauthError.data).to.equal('{"error_code":"invalid_grant"}');
+      });
+    }); // that errors due to token request error, in node-oauth object literal form with JSON body
+    
+    describe('that errors due to token request error, in node-oauth object literal form with text body', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        return done(new Error('verify callback should not be called'));
+      });
+  
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback({ statusCode: 500, data: 'Something went wrong'});
+      }
+  
+  
+      var err;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(InternalOAuthError)
+        expect(err.message).to.equal('Failed to obtain access token');
+        expect(err.oauthError.statusCode).to.equal(500);
+        expect(err.oauthError.data).to.equal('Something went wrong');
+      });
+    }); // that errors due to token request error, in node-oauth object literal form with text body
     
   }); // processing response to authorization request
   

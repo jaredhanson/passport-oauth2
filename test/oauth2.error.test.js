@@ -5,7 +5,8 @@ var chai = require('chai')
 
 
 describe('OAuth2Strategy', function() {
-    
+  
+  // OK
   describe('that encounters an error obtaining an access token', function() {
     
     var strategy = new OAuth2Strategy({
@@ -51,6 +52,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('that encounters a node-oauth object literal error with OAuth-compatible body obtaining an access token', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -96,6 +98,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('that encounters a node-oauth object literal error with nearly-OAuth-compatible body obtaining an access token', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -141,6 +144,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('that encounters a node-oauth object literal error with non-OAuth-compatible body obtaining an access token', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
