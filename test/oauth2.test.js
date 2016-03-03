@@ -72,14 +72,14 @@ describe('OAuth2Strategy', function() {
     }); // without a clientID option
     
     describe('without a clientSecret option', function() {
-      it('should throw', function() {
+      it('should not throw', function() {
         expect(function() {
           new OAuth2Strategy({
             authorizationURL: 'https://www.example.com/oauth2/authorize',
             tokenURL: 'https://www.example.com/oauth2/token',
             clientID: 'ABC123'
           }, function() {});
-        }).to.throw(TypeError, 'OAuth2Strategy requires a clientSecret option');
+        }).to.not.throw();
       });
     }); // without a clientSecret option
     
