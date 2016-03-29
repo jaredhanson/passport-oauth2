@@ -51,6 +51,41 @@ describe('OAuth2Strategy', function() {
         });
       }); // that redirects to service provider
       
+      describe('that redirects to service provider with other data in session', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+              req.session['oauth2:www.example.com'] = {};
+              req.session['oauth2:www.example.com'].foo = 'bar';
+            })
+            .authenticate();
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+        
+          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+        });
+        
+        it('should preserve other data in session', function() {
+          expect(request.session['oauth2:www.example.com'].foo).to.equal('bar');
+        });
+      }); // that redirects to service provider with other data in session
+      
       describe('that errors due to lack of session support in app', function() {
         var request, err;
   
