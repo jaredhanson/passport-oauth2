@@ -3,7 +3,8 @@ var chai = require('chai')
 
 
 describe('OAuth2Strategy', function() {
-    
+  
+  // OK
   describe('with scope option', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -51,6 +52,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('with scope separator option', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -192,6 +194,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling a request on secure connection to be redirected for authorization', function() {
       var url;
   
@@ -214,6 +217,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling a request on insecure connection to be redirected for authorization', function() {
       var url;
   
