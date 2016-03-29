@@ -274,4 +274,112 @@ describe('OAuth2Strategy', function() {
     
   }); // using default session state store
   
+  
+  describe('using default session state store with session key option', function() {
+    var strategy = new OAuth2Strategy({
+      authorizationURL: 'https://www.example.com/oauth2/authorize',
+      tokenURL: 'https://www.example.com/oauth2/token',
+      clientID: 'ABC123',
+      clientSecret: 'secret',
+      callbackURL: 'https://www.example.net/auth/example/callback',
+      state: true,
+      sessionKey: 'oauth2:example'
+    },
+    function(accessToken, refreshToken, profile, done) {
+      if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+      if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+      if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+      if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+
+      return done(null, { id: '1234' }, { message: 'Hello' });
+    });
+
+    strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+      if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+      if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+      if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+
+      return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+    }
+    
+    
+    describe('issuing authorization request', function() {
+      
+      describe('that redirects to service provider', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate();
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+        
+          expect(request.session['oauth2:example'].state).to.have.length(24);
+          expect(request.session['oauth2:example'].state).to.equal(u.query.state);
+        });
+      }); // that redirects to service provider
+      
+    }); // issuing authorization request
+    
+    describe('processing response to authorization request', function() {
+      
+      describe('that was approved', function() {
+        var request
+          , user
+          , info;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .success(function(u, i) {
+              user = u;
+              info = i;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+            
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+              req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session = {};
+              req.session['oauth2:example'] = {};
+              req.session['oauth2:example']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+            })
+            .authenticate();
+        });
+  
+        it('should supply user', function() {
+          expect(user).to.be.an.object;
+          expect(user.id).to.equal('1234');
+        });
+  
+        it('should supply info', function() {
+          expect(info).to.be.an.object;
+          expect(info.message).to.equal('Hello');
+        });
+      
+        it('should remove state from session', function() {
+          expect(request.session['oauth2:example']).to.be.undefined;
+        });
+      }); // that was approved
+      
+    }); // processing response to authorization request
+    
+  }); // using default session state store with session key option
+  
 });

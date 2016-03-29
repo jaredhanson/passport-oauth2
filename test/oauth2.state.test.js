@@ -287,6 +287,7 @@ describe('OAuth2Strategy', function() {
       }
     }
     
+    // OK
     describe('handling an authorized return request with correct state', function() {
       var request
         , user
@@ -327,6 +328,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling a request to be redirected for authorization', function() {
       var request, url;
   
@@ -356,7 +358,8 @@ describe('OAuth2Strategy', function() {
       });
     });
   });
-    
+  
+  // OK
   describe('with explicit state declared as authenticate option', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
