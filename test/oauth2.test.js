@@ -1398,6 +1398,75 @@ describe('OAuth2Strategy', function() {
           });
         }); // that is not trusted by app and sets x-forwarded-proto and x-forwarded-host
         
+        describe('that is trusted by strategy and sets x-forwarded-proto', function() {
+          var strategy = new OAuth2Strategy({
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientID: 'ABC123',
+            clientSecret: 'secret',
+            callbackURL: '/auth/example/callback',
+            proxy: true
+          },
+          function(accessToken, refreshToken, profile, done) {});
+          
+          
+          var url;
+
+          before(function(done) {
+            chai.passport.use(strategy)
+              .redirect(function(u) {
+                url = u;
+                done();
+              })
+              .req(function(req) {
+                req.url = '/auth/example';
+                req.headers.host = 'www.example.net';
+                req.headers['x-forwarded-proto'] = 'https';
+                req.connection = {};
+              })
+              .authenticate();
+          });
+
+          it('should be redirected', function() {
+            expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+          });
+        }); // that is trusted by strategy and sets x-forwarded-proto
+        
+        describe('that is trusted by strategy and sets x-forwarded-proto and x-forwarded-host', function() {
+          var strategy = new OAuth2Strategy({
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientID: 'ABC123',
+            clientSecret: 'secret',
+            callbackURL: '/auth/example/callback',
+            proxy: true
+          },
+          function(accessToken, refreshToken, profile, done) {});
+          
+          
+          var url;
+
+          before(function(done) {
+            chai.passport.use(strategy)
+              .redirect(function(u) {
+                url = u;
+                done();
+              })
+              .req(function(req) {
+                req.url = '/auth/example';
+                req.headers.host = 'server.internal';
+                req.headers['x-forwarded-proto'] = 'https';
+                req.headers['x-forwarded-host'] = 'www.example.net';
+                req.connection = {};
+              })
+              .authenticate();
+          });
+
+          it('should be redirected', function() {
+            expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+          });
+        }); // that is trusted by strategy and sets x-forwarded-proto and x-forwarded-host
+        
       }); // from behind a secure proxy
     
     }); // issuing authorization request

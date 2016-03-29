@@ -365,6 +365,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
+  // OK
   describe('with relative callback URL and trust proxy option', function() {
     var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -419,6 +420,7 @@ describe('OAuth2Strategy', function() {
       });
     });
 
+    // OK
     describe('handling a request to be redirected for authorization that contains trusted x-forwarded-host header', function() {
       var url;
 
