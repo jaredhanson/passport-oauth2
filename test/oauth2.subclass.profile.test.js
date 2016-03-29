@@ -400,6 +400,56 @@ describe('OAuth2Strategy subclass', function() {
       });
     }); // skipping user profile due to skipUserProfile asynchronously returning true
     
+    describe('error due to skipUserProfile asynchronously returning error', function() {
+      var strategy = new FooOAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        skipUserProfile: function(accessToken, done) {
+          return done(new Error('something went wrong'));
+        }
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        if (profile !== undefined) { return done(new Error('incorrect profile argument')); }
+        
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+  
+  
+      var request
+        , err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('something went wrong');
+      });
+    }); // error due to skipUserProfile asynchronously returning error
+    
   }); // that overrides userProfile
   
 });
