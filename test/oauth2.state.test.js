@@ -32,6 +32,7 @@ describe('OAuth2Strategy', function() {
       }
     }
     
+    // OK
     describe('handling an authorized return request with correct state', function() {
       var request
         , user
@@ -72,6 +73,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    // OK
     describe('handling an authorized return request with incorrect state', function() {
       var request
         , info, status;
@@ -110,6 +112,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    // OK
     describe('handling an authorized return request with session that lacks key', function() {
       var request
         , info, status;
@@ -142,6 +145,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    // OK
     describe('handling an authorized return request with session that has key but no state', function() {
       var request
         , info, status;
@@ -175,6 +179,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    // OK
     describe('handling an authorized return request without session', function() {
       var request
         , err;
@@ -201,6 +206,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling a request to be redirected for authorization', function() {
       var request, url;
   
@@ -230,6 +236,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    // OK
     describe('handling a request without session to be redirected for authorization', function() {
       var request, err;
   
