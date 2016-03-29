@@ -272,6 +272,8 @@ describe('OAuth2Strategy', function() {
       });
     }); // that redirects to service provider with relative redirect URI option
     
+    // WIP: Proxy security tests
+    
   }); // issuing authorization request
   
   
@@ -1079,6 +1081,82 @@ describe('OAuth2Strategy', function() {
         expect(err.oauthError.data).to.equal('Something went wrong');
       });
     }); // that errors due to token request error, in node-oauth object literal form with text body
+    
+    describe('that errors due to verify callback supplying error', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        return done(new Error('something went wrong'));
+      });
+  
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+  
+  
+      var err;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something went wrong');
+      });
+    }); // that errors due to verify callback supplying error
+    
+    describe('that errors due to verify callback throwing error', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        throw new Error('something was thrown');
+      });
+  
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+  
+  
+      var err;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something was thrown');
+      });
+    }); // that errors due to verify callback throwing error
     
   }); // processing response to authorization request
   
