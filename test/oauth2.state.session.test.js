@@ -176,6 +176,48 @@ describe('OAuth2Strategy', function() {
         });
       }); // that was approved
       
+      describe('that was approved with other data in the session', function() {
+        var request
+          , user
+          , info;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .success(function(u, i) {
+              user = u;
+              info = i;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+            
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+              req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session = {};
+              req.session['oauth2:www.example.com'] = {};
+              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com'].foo = 'bar';
+            })
+            .authenticate();
+        });
+  
+        it('should supply user', function() {
+          expect(user).to.be.an.object;
+          expect(user.id).to.equal('1234');
+        });
+  
+        it('should supply info', function() {
+          expect(info).to.be.an.object;
+          expect(info.message).to.equal('Hello');
+        });
+      
+        it('should preserve other data from session', function() {
+          expect(request.session['oauth2:www.example.com'].state).to.be.undefined;
+          expect(request.session['oauth2:www.example.com'].foo).to.equal('bar');
+        });
+      }); // that was approved with other data in the session
+      
       describe('that fails due to state being invalid', function() {
         var request
           , info, status;
