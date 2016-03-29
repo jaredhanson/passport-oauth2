@@ -130,6 +130,7 @@ describe('OAuth2Strategy', function() {
       }
     }
   
+    // OK
     describe('handling an authorized return request on secure connection', function() {
       var user
         , info;
@@ -162,6 +163,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling an authorized return request on insecure connection', function() {
       var user
         , info;
