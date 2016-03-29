@@ -1276,6 +1276,129 @@ describe('OAuth2Strategy', function() {
           expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
         });
       }); // that redirects to service provider from insecure connection
+      
+      
+      describe('from behind a secure proxy', function() {
+        
+        describe('that is trusted by app and sets x-forwarded-proto', function() {
+          var url;
+
+          before(function(done) {
+            chai.passport.use(strategy)
+              .redirect(function(u) {
+                url = u;
+                done();
+              })
+              .req(function(req) {
+                req.app = {
+                  get: function(name) {
+                    return name == 'trust proxy' ? true : false;
+                  }
+                }
+            
+                req.url = '/auth/example';
+                req.headers.host = 'www.example.net';
+                req.headers['x-forwarded-proto'] = 'https';
+                req.connection = {};
+              })
+              .authenticate();
+          });
+
+          it('should be redirected', function() {
+            expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+          });
+        }); // that is trusted by app and sets x-forwarded-proto
+        
+        describe('that is trusted by app and sets x-forwarded-proto and x-forwarded-host', function() {
+          var url;
+
+          before(function(done) {
+            chai.passport.use(strategy)
+              .redirect(function(u) {
+                url = u;
+                done();
+              })
+              .req(function(req) {
+                req.app = {
+                  get: function(name) {
+                    return name == 'trust proxy' ? true : false;
+                  }
+                }
+            
+                req.url = '/auth/example';
+                req.headers.host = 'server.internal';
+                req.headers['x-forwarded-proto'] = 'https';
+                req.headers['x-forwarded-host'] = 'www.example.net';
+                req.connection = {};
+              })
+              .authenticate();
+          });
+
+          it('should be redirected', function() {
+            expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+          });
+        }); // that is trusted by app and sets x-forwarded-proto and x-forwarded-host
+        
+        describe('that is not trusted by app and sets x-forwarded-proto', function() {
+          var url;
+
+          before(function(done) {
+            chai.passport.use(strategy)
+              .redirect(function(u) {
+                url = u;
+                done();
+              })
+              .req(function(req) {
+                req.app = {
+                  get: function(name) {
+                    return name == 'trust proxy' ? false : false;
+                  }
+                }
+            
+                req.url = '/auth/example';
+                req.headers.host = 'www.example.net';
+                req.headers['x-forwarded-proto'] = 'https';
+                req.connection = {};
+              })
+              .authenticate();
+          });
+
+          it('should be redirected', function() {
+            expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+          });
+        }); // that is trusted by app and sets x-forwarded-proto and x-forwarded-host
+        
+        describe('that is not trusted by app and sets x-forwarded-proto and x-forwarded-host', function() {
+          var url;
+
+          before(function(done) {
+            chai.passport.use(strategy)
+              .redirect(function(u) {
+                url = u;
+                done();
+              })
+              .req(function(req) {
+                req.app = {
+                  get: function(name) {
+                    return name == 'trust proxy' ? false : false;
+                  }
+                }
+            
+                req.url = '/auth/example';
+                req.headers.host = 'server.internal';
+                req.headers['x-forwarded-proto'] = 'https';
+                req.headers['x-forwarded-host'] = 'www.example.net';
+                req.connection = {};
+              })
+              .authenticate();
+          });
+
+          it('should be redirected', function() {
+            expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fserver.internal%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+          });
+        }); // that is not trusted by app and sets x-forwarded-proto and x-forwarded-host
+        
+      }); // from behind a secure proxy
     
     }); // issuing authorization request
     

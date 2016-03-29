@@ -242,6 +242,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling a request to be redirected for authorization from behind a secure proxy that is trusted by app', function() {
       var url;
   
@@ -271,6 +272,7 @@ describe('OAuth2Strategy', function() {
       });
     });
   
+    // OK
     describe('handling a request to be redirected for authorization from behind a secure proxy that sets x-forwarded-host that is trusted by app', function() {
       var url;
   
@@ -301,6 +303,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    // OK
     describe('handling a request to be redirected for authorization that contains untrusted x-forwarded-proto header', function() {
       var url;
 
@@ -330,6 +333,7 @@ describe('OAuth2Strategy', function() {
       });
     });
 
+    // OK
     describe('handling a request to be redirected for authorization that contains untrusted x-forwarded-host header', function() {
       var url;
 
