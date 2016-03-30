@@ -103,7 +103,7 @@ describe('OAuth2Strategy', function() {
   
         it('should error', function() {
           expect(err).to.be.an.instanceof(Error)
-          expect(err.message).to.equal('OAuth2Strategy requires session support when using state. Did you forget app.use(express.session(...))?');
+          expect(err.message).to.equal('OAuth 2.0 authentication requires session support when using state. Did you forget to use express-session middleware?');
         });
       }); // that errors due to lack of session support in app
       
@@ -343,7 +343,7 @@ describe('OAuth2Strategy', function() {
   
         it('should error', function() {
           expect(err).to.be.an.instanceof(Error)
-          expect(err.message).to.equal('OAuth2Strategy requires session support when using state. Did you forget app.use(express.session(...))?');
+          expect(err.message).to.equal('OAuth 2.0 authentication requires session support when using state. Did you forget to use express-session middleware?');
         });
       }); // that errors due to lack of session support in app
       
