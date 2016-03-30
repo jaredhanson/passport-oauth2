@@ -25,7 +25,16 @@ describe('OAuth2Strategy', function() {
       return cb(null, 'foos7473');
     };
     
-    CustomStore.prototype.verify = function(req, state, cb) {
+    CustomStore.prototype.verify = function(req, state, meta, cb) {
+      if (req.url === '/error') { return cb(new Error('something went wrong verifying state')); }
+      if (req.url === '/exception') { throw new Error('something went horribly wrong verifying state'); }
+      
+      if (req.url !== '/auth/example/callback') { return cb(new Error('incorrect req argument')); }
+      if (state !== 'foos7473') { return cb(new Error('incorrect state argument')); }
+      if (meta.authorizationURL !== 'https://www.example.com/oauth2/authorize') { return cb(new Error('incorrect meta.authorizationURL argument')); }
+      if (meta.tokenURL !== 'https://www.example.com/oauth2/token') { return cb(new Error('incorrect meta.tokenURL argument')); }
+      if (meta.clientID !== 'ABC123') { return callback(new Error('incorrect meta.clientID argument')); }
+      
       req.customStoreVerifyCalled = req.customStoreVerifyCalled ? req.customStoreVerifyCalled++ : 1;
       return cb(null, true);
     };
@@ -157,6 +166,7 @@ describe('OAuth2Strategy', function() {
             .req(function(req) {
               request = req;
           
+              req.url = '/auth/example/callback';
               req.query = {};
               req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
               req.query.state = 'foos7473';
@@ -178,6 +188,60 @@ describe('OAuth2Strategy', function() {
           expect(request.customStoreVerifyCalled).to.equal(1);
         });
       }); // that was approved
+      
+      describe('that errors due to custom store supplying error', function() {
+        var request
+          , err;
+
+        before(function(done) {
+          chai.passport.use(strategy)
+            .error(function(e) {
+              err = e;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+          
+              req.url = '/error';
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+              req.query.state = 'foos7473';
+            })
+            .authenticate();
+        });
+
+        it('should error', function() {
+          expect(err).to.be.an.instanceof(Error);
+          expect(err.message).to.equal('something went wrong verifying state');
+        });
+      }); // that errors due to custom store supplying error
+      
+      describe('that errors due to custom store throwing error', function() {
+        var request
+          , err;
+
+        before(function(done) {
+          chai.passport.use(strategy)
+            .error(function(e) {
+              err = e;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+          
+              req.url = '/exception';
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+              req.query.state = 'foos7473';
+            })
+            .authenticate();
+        });
+
+        it('should error', function() {
+          expect(err).to.be.an.instanceof(Error);
+          expect(err.message).to.equal('something went horribly wrong verifying state');
+        });
+      }); // that errors due to custom store throwing error
       
     }); // processing response to authorization request
     
