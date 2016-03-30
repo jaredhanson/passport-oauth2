@@ -1,10 +1,9 @@
 # passport-oauth2
 
-[![Build](https://travis-ci.org/jaredhanson/passport-oauth2.svg?branch=master)](https://travis-ci.org/jaredhanson/passport-oauth2)
-[![Coverage](https://coveralls.io/repos/jaredhanson/passport-oauth2/badge.svg?branch=master)](https://coveralls.io/r/jaredhanson/passport-oauth2)
-[![Quality](https://codeclimate.com/github/jaredhanson/passport-oauth2/badges/gpa.svg)](https://codeclimate.com/github/jaredhanson/passport-oauth2)
-[![Dependencies](https://david-dm.org/jaredhanson/passport-oauth2.svg)](https://david-dm.org/jaredhanson/passport-oauth2)
-[![Tips](https://img.shields.io/gratipay/jaredhanson.svg)](https://gratipay.com/jaredhanson/)
+[![Build](https://img.shields.io/travis/jaredhanson/passport-oauth2.svg)](https://travis-ci.org/jaredhanson/passport-oauth2)
+[![Coverage](https://img.shields.io/coveralls/jaredhanson/passport-oauth2.svg)](https://coveralls.io/r/jaredhanson/passport-oauth2)
+[![Quality](https://img.shields.io/codeclimate/github/jaredhanson/passport-oauth2.svg?label=quality)](https://codeclimate.com/github/jaredhanson/passport-oauth2)
+[![Dependencies](https://img.shields.io/david/jaredhanson/passport-oauth2.svg)](https://david-dm.org/jaredhanson/passport-oauth2)
 
 
 General-purpose OAuth 2.0 authentication strategy for [Passport](http://passportjs.org/).
