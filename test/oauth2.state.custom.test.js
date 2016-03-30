@@ -12,8 +12,14 @@ describe('OAuth2Strategy', function() {
     function CustomStore() {
     }
 
-    CustomStore.prototype.store = function(req, cb) {
+    CustomStore.prototype.store = function(req, meta, cb) {
+      if (req.url === '/error') { return cb(new Error('something went wrong storing state')); }
+      if (req.url === '/exception') { throw new Error('something went horribly wrong storing state'); }
+      
       if (req.url !== '/me') { return cb(new Error('incorrect req argument')); }
+      if (meta.authorizationURL !== 'https://www.example.com/oauth2/authorize') { return cb(new Error('incorrect meta.authorizationURL argument')); }
+      if (meta.tokenURL !== 'https://www.example.com/oauth2/token') { return cb(new Error('incorrect meta.tokenURL argument')); }
+      if (meta.clientID !== 'ABC123') { return callback(new Error('incorrect meta.clientID argument')); }
       
       req.customStoreStoreCalled = req.customStoreStoreCalled ? req.customStoreStoreCalled++ : 1;
       return cb(null, 'foos7473');
@@ -59,6 +65,50 @@ describe('OAuth2Strategy', function() {
           expect(request.customStoreStoreCalled).to.equal(1);
         });
       }); // that redirects to service provider
+      
+      describe('that errors due to custom store supplying error', function() {
+        var request, err;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .error(function(e) {
+              err = e;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.url = '/error';
+            })
+            .authenticate();
+        });
+  
+        it('should error', function() {
+          expect(err).to.be.an.instanceof(Error);
+          expect(err.message).to.equal('something went wrong storing state');
+        });
+      }); // that errors due to custom store supplying error
+      
+      describe('that errors due to custom store throwing error', function() {
+        var request, err;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .error(function(e) {
+              err = e;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.url = '/exception';
+            })
+            .authenticate();
+        });
+  
+        it('should error', function() {
+          expect(err).to.be.an.instanceof(Error);
+          expect(err.message).to.equal('something went horribly wrong storing state');
+        });
+      }); // that errors due to custom store throwing error
       
     }); // issuing authorization request
     
