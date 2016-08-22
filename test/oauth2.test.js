@@ -1168,6 +1168,46 @@ describe('OAuth2Strategy', function() {
         expect(err.oauthError.data).to.equal('Something went wrong');
       });
     }); // that errors due to token request error, in node-oauth object literal form with text body
+
+    describe('that errors due to token request error, param object contains errors', function() {
+      var strategy = new OAuth2Strategy({
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientID: 'ABC123',
+            clientSecret: 'secret',
+            callbackURL: 'https://www.example.net/auth/example/callback',
+          },
+          function(accessToken, refreshToken, params, profile, done) {
+            return done(new Error('verify callback should not be called'));
+          });
+
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { error: 500, error_description: 'Something went wrong' });
+      }
+
+
+      var param;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+            .error(function(e) {
+              param = e;
+              done();
+            })
+            .req(function(req) {
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            })
+            .authenticate();
+      });
+
+      it('should error', function() {
+        expect(param).to.be.an.instanceof(InternalOAuthError)
+        expect(param.message).to.equal('Failed to obtain access token');
+        expect(param.oauthError.statusCode).to.equal(500);
+        expect(param.oauthError.data).to.equal('Something went wrong');
+      });
+    }); // that errors due to token request error, in node-oauth object literal form with text body
     
     describe('that errors due to verify callback supplying error', function() {
       var strategy = new OAuth2Strategy({
