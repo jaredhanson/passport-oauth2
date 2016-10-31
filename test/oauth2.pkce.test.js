@@ -59,7 +59,7 @@ describe('OAuth2Strategy', function() {
         expect(u.query.code_challenge_method).to.equal('plain');
       });
     
-      it('should save state in session', function() {
+      it('should save verifier in session', function() {
         var u = uri.parse(url, true);
         expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
         expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
@@ -124,7 +124,7 @@ describe('OAuth2Strategy', function() {
         expect(u.query.code_challenge_method).to.equal('S256');
       });
     
-      it('should save state in session', function() {
+      it('should save verifier in session', function() {
         var u = uri.parse(url, true);
         expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
         expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
