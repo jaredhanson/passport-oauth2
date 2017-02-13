@@ -1,5 +1,6 @@
 docs/
 reports/
+.vscode/
 
 # Mac OS X
 .DS_Store
