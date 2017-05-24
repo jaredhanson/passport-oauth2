@@ -21,7 +21,7 @@ describe('OAuth2Strategy', function() {
         expect(strategy.name).to.equal('oauth2');
       });
     }); // with normal options
-    
+
     describe('without a verify callback', function() {
       it('should throw', function() {
         expect(function() {
@@ -452,7 +452,7 @@ describe('OAuth2Strategy', function() {
   
   
   describe('processing response to authorization request', function() {
-    
+
     describe('that was approved without redirect URI', function() {
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -1705,5 +1705,29 @@ describe('OAuth2Strategy', function() {
     }); // processing response to authorization request
     
   }); // using a relative redirect URI
-  
+
+  describe('with custom agent in custom headers', function() {
+        var strategy = new OAuth2Strategy({
+          authorizationURL: 'https://www.example.com/oauth2/authorize',
+          tokenURL: 'https://www.example.com/oauth2/token',
+          clientID: 'ABC123',
+          clientSecret: 'secret',
+          callbackURL: '/auth/example/callback',
+          customHeaders: {
+            agent: 'Awesome agent'
+          }
+        },
+        function(accessToken, refreshToken, profile, done) {
+          if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+          if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+          if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+          if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+
+          return done(null, { id: '1234' }, { message: 'Hello' });
+        });
+
+        it('should set agent in oauth2', function() {
+          expect(strategy._oauth2._agent).to.equal('Awesome agent');
+        });
+    }); 
 });
