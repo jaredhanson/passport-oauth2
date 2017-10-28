@@ -143,7 +143,7 @@ Whether or not to return the user profile information of the user granting autho
 
 #### state
 OPTIONAL<br>
-`{ sessionKey: boolean }`<br>
+`{ state: boolean }`<br>
 When set to `true`, a state string with be created, stored, sent along with the authentication request and verified when the response from the OAuth 2.0 service is received.
 
 #### store
