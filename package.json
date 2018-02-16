@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jaredhanson/passport-oauth2.git"
+    "url": "git://github.com/mdemoret/passport-oauth2.git"
   },
   "bugs": {
-    "url": "http://github.com/jaredhanson/passport-oauth2/issues"
+    "url": "http://github.com/mdemoret/passport-oauth2/issues"
   },
   "license": "MIT",
   "licenses": [
