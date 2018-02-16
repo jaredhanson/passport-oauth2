@@ -17,6 +17,12 @@
     "email": "jaredhanson@gmail.com",
     "url": "http://www.jaredhanson.net/"
   },
+  "contributors": [
+     {
+        "name": "Michael Demoret",
+        "email": "mdemoret@gmail.com"
+     }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/mdemoret/passport-oauth2.git"
