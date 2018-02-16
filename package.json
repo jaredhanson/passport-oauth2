@@ -49,5 +49,6 @@
   },
   "scripts": {
     "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js test/**/*.test.js"
-  }
+  },
+  "typings": "lib/passport-oauth2.d.ts"
 }

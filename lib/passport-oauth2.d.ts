@@ -37,7 +37,7 @@ declare namespace OAuth2Strategy {
         clientID: string;
         clientSecret: string;
         callbackURL: string;
-        useExactURLs: boolean;
+        useExactURLs?: boolean;
     }
     interface StrategyOptions extends _StrategyOptionsBase {
         passReqToCallback?: false;
