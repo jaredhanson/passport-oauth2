@@ -1,6 +1,6 @@
 {
   "name": "noprom-passport-oauth2",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "OAuth 2.0 authentication strategy for Passport.",
   "keywords": [
     "passport",
