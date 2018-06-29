@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/passport-next/passport-oauth2.svg?branch=master)](https://travis-ci.org/passport-next/passport-oauth2)
 [![Coverage Status](https://coveralls.io/repos/github/passport-next/passport-oauth2/badge.svg?branch=master)](https://coveralls.io/github/passport-next/passport-oauth2?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/5c6d93b9711897ef2949/maintainability)](https://codeclimate.com/github/passport-next/passport-oauth2/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/e6a0d9379adb9283308a/maintainability)](https://codeclimate.com/github/passport-next/passport-oauth2/maintainability)
 [![Dependencies](https://david-dm.org/passport-next/passport-oauth2.png)](https://david-dm.org/passport-next/passport-oauth2)
 <!--[![SAST](https://gitlab.com/passport-next/passport-oauth2/badges/master/build.svg)](https://gitlab.com/passport-next/passport-oauth2/badges/master/build.svg)-->
 
