@@ -1,6 +1,6 @@
 {
-  "name": "passport-oauth2",
-  "version": "1.4.0",
+  "name": "@passport-next/passport-oauth2",
+  "version": "1.5.0",
   "description": "OAuth 2.0 authentication strategy for Passport.",
   "keywords": [
     "passport",
@@ -13,16 +13,15 @@
     "oauth2"
   ],
   "author": {
-    "name": "Jared Hanson",
-    "email": "jaredhanson@gmail.com",
-    "url": "http://www.jaredhanson.net/"
+    "name": "Rowan Wookey",
+    "email": "admin@rwky.net"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jaredhanson/passport-oauth2.git"
+    "url": "git://github.com/passport-next/passport-oauth2.git"
   },
   "bugs": {
-    "url": "http://github.com/jaredhanson/passport-oauth2/issues"
+    "url": "http://github.com/passport-next/passport-oauth2/issues"
   },
   "license": "MIT",
   "licenses": [
@@ -34,9 +33,8 @@
   "main": "./lib",
   "dependencies": {
     "oauth": "0.9.x",
-    "passport-strategy": "1.x.x",
-    "uid2": "0.0.x",
-    "utils-merge": "1.x.x"
+    "@passport-next/passport-strategy": "1.1.x",
+    "lodash": "4.17.x"
   },
   "devDependencies": {
     "make-node": "0.3.x",
@@ -45,7 +43,7 @@
     "chai-passport-strategy": "1.x.x"
   },
   "engines": {
-    "node": ">= 0.4.0"
+    "node": ">= 6"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js test/**/*.test.js"

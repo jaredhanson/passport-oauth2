@@ -40,13 +40,13 @@ describe('OAuth2Strategy', function() {
   
         it('should be redirected', function() {
           var u = uri.parse(url, true);
-          expect(u.query.state).to.have.length(24);
+          expect(u.query.state).to.have.length(32);
         });
       
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state).to.have.length(32);
           expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
         });
       }); // that redirects to service provider
@@ -71,13 +71,13 @@ describe('OAuth2Strategy', function() {
   
         it('should be redirected', function() {
           var u = uri.parse(url, true);
-          expect(u.query.state).to.have.length(24);
+          expect(u.query.state).to.have.length(32);
         });
       
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state).to.have.length(32);
           expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
         });
         
@@ -140,13 +140,13 @@ describe('OAuth2Strategy', function() {
         it('should be redirected', function() {
           var u = uri.parse(url, true);
           expect(u.query.foo).equal('bar');
-          expect(u.query.state).to.have.length(24);
+          expect(u.query.state).to.have.length(32);
         });
       
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state).to.have.length(32);
           expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
         });
       }); // that redirects to service provider
@@ -444,13 +444,13 @@ describe('OAuth2Strategy', function() {
   
         it('should be redirected', function() {
           var u = uri.parse(url, true);
-          expect(u.query.state).to.have.length(24);
+          expect(u.query.state).to.have.length(32);
         });
       
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:example'].state).to.have.length(24);
+          expect(request.session['oauth2:example'].state).to.have.length(32);
           expect(request.session['oauth2:example'].state).to.equal(u.query.state);
         });
       }); // that redirects to service provider
