@@ -1,3 +1,8 @@
+# 1.6.0 (2018-07-07)
+
+* Updated README.md @dan-nl
+* Added responseType as parameter defaults to 'code' @jeffersonpenna
+
 # 1.5.0 (2018-06-29)
     
 * Added CHANGELOG.md @rwky
