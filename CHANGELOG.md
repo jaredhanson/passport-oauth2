@@ -1,6 +1,7 @@
 # 1.7.0 (2018-07-07)
 
 * Support scopes defined both in strategy constructor and authenticate call. @anabellaspinelli
+* Updated loadash dep for security https://nodesecurity.io/advisories/577 @rwky
 
 # 1.6.0 (2018-07-07)
 

@@ -34,7 +34,7 @@
   "dependencies": {
     "oauth": "0.9.x",
     "@passport-next/passport-strategy": "1.1.x",
-    "lodash": "4.17.x"
+    "lodash": ">=4.17.5"
   },
   "devDependencies": {
     "make-node": "0.3.x",
