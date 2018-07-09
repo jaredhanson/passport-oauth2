@@ -63,13 +63,13 @@ describe('OAuth2Strategy subclass', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
         expect(user.username).to.equal('jaredhanson');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // fetching user profile
@@ -160,12 +160,12 @@ describe('OAuth2Strategy subclass', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // skipping user profile due to skipUserProfile option set to true
@@ -216,13 +216,13 @@ describe('OAuth2Strategy subclass', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
         expect(user.username).to.equal('jaredhanson');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // not skipping user profile due to skipUserProfile returning false
@@ -273,12 +273,12 @@ describe('OAuth2Strategy subclass', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // skipping user profile due to skipUserProfile returning true
@@ -331,13 +331,13 @@ describe('OAuth2Strategy subclass', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
         expect(user.username).to.equal('jaredhanson');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // not skipping user profile due to skipUserProfile asynchronously returning false
@@ -390,12 +390,12 @@ describe('OAuth2Strategy subclass', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // skipping user profile due to skipUserProfile asynchronously returning true

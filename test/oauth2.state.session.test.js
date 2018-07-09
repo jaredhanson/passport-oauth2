@@ -206,12 +206,12 @@ describe('OAuth2Strategy', function() {
         });
   
         it('should supply user', function() {
-          expect(user).to.be.an.object;
+          expect(user).to.be.an('object');
           expect(user.id).to.equal('1234');
         });
   
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Hello');
         });
       
@@ -247,12 +247,12 @@ describe('OAuth2Strategy', function() {
         });
   
         it('should supply user', function() {
-          expect(user).to.be.an.object;
+          expect(user).to.be.an('object');
           expect(user.id).to.equal('1234');
         });
   
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Hello');
         });
       
@@ -287,7 +287,7 @@ describe('OAuth2Strategy', function() {
         });
   
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Invalid authorization request state.');
         });
       
@@ -323,7 +323,7 @@ describe('OAuth2Strategy', function() {
         });
   
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Unable to verify authorization request state.');
         });
       
@@ -356,7 +356,7 @@ describe('OAuth2Strategy', function() {
         });
   
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Unable to verify authorization request state.');
         });
       
@@ -485,12 +485,12 @@ describe('OAuth2Strategy', function() {
         });
   
         it('should supply user', function() {
-          expect(user).to.be.an.object;
+          expect(user).to.be.an('object');
           expect(user.id).to.equal('1234');
         });
   
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Hello');
         });
       
