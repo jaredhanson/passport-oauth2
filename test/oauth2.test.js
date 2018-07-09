@@ -525,12 +525,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved without redirect URI
@@ -579,12 +579,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved with redirect URI
@@ -633,12 +633,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved with redirect URI option
@@ -690,12 +690,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved with relative redirect URI option
@@ -745,12 +745,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved using verify callback that accepts params
@@ -801,12 +801,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved using verify callback, in passReqToCallback mode
@@ -858,12 +858,12 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply user', function() {
-        expect(user).to.be.an.object;
+        expect(user).to.be.an('object');
         expect(user.id).to.equal('1234');
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved using verify callback that accepts params, in passReqToCallback mode
@@ -946,7 +946,7 @@ describe('OAuth2Strategy', function() {
       });
 
       it('should supply info', function() {
-        expect(info).to.be.an.object;
+        expect(info).to.be.an('object');
         expect(info.message).to.equal('Invite required');
       });
     }); // that fails due to verify callback supplying false with additional info
@@ -1664,12 +1664,12 @@ describe('OAuth2Strategy', function() {
         });
 
         it('should supply user', function() {
-          expect(user).to.be.an.object;
+          expect(user).to.be.an('object');
           expect(user.id).to.equal('1234');
         });
 
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Hello');
         });
       }); // that was approved over secure connection
@@ -1721,12 +1721,12 @@ describe('OAuth2Strategy', function() {
         });
 
         it('should supply user', function() {
-          expect(user).to.be.an.object;
+          expect(user).to.be.an('object');
           expect(user.id).to.equal('1234');
         });
 
         it('should supply info', function() {
-          expect(info).to.be.an.object;
+          expect(info).to.be.an('object');
           expect(info.message).to.equal('Hello');
         });
       }); // that was approved over insecure connection
