@@ -109,6 +109,50 @@ describe('OAuth2Strategy', function() {
       
     }); // issuing authorization request
     
+    describe('issuing authorization request to authorization server using authorization endpoint that has query parameters including state', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize?foo=bar&state=baz',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        state: true
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      
+      describe('that redirects to service provider', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate();
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.foo).equal('bar');
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+        
+          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+        });
+      }); // that redirects to service provider
+      
+    }); // issuing authorization request to authorization server using authorization endpoint that has query parameters including state
+    
     describe('processing response to authorization request', function() {
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
