@@ -1,3 +1,7 @@
+# 1.7.1 (2019-02-13)
+
+* Updated npm deps @rwky
+
 # 1.7.0 (2018-07-07)
 
 * Support scopes defined both in strategy constructor and authenticate call. @anabellaspinelli

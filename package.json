@@ -1,6 +1,6 @@
 {
   "name": "@passport-next/passport-oauth2",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "OAuth 2.0 authentication strategy for Passport.",
   "keywords": [
     "passport",
@@ -32,9 +32,9 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "oauth": "0.9.x",
     "@passport-next/passport-strategy": "1.1.x",
-    "lodash": ">=4.17.5"
+    "lodash": "^4.17.11",
+    "oauth": "0.9.x"
   },
   "devDependencies": {
     "make-node": "0.3.x",
