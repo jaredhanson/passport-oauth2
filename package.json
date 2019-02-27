@@ -1,6 +1,6 @@
 {
   "name": "@passport-next/passport-oauth2",
-  "version": "1.7.1",
+  "version": "2.0.0",
   "description": "OAuth 2.0 authentication strategy for Passport.",
   "keywords": [
     "passport",
@@ -37,15 +37,21 @@
     "oauth": "0.9.x"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-passport-strategy": "1.x.x",
+    "eslint": "5.14.x",
+    "eslint-config-airbnb-base": "13.1.x",
+    "eslint-plugin-import": "2.16.x",
     "make-node": "0.3.x",
-    "mocha": "5.x.x",
-    "chai": "4.x.x",
-    "chai-passport-strategy": "1.x.x"
+    "mocha": "6.x.x"
   },
   "engines": {
     "node": ">= 6"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js test/**/*.test.js"
+    "spec": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js test/**/*.test.js",
+    "lint": "node_modules/.bin/eslint --ext .js . --max-warnings 0",
+    "lintfix": "node_modules/.bin/eslint --ext .js . --fix",
+    "test": "npm run lint && npm run spec"
   }
 }

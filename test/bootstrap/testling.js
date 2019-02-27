@@ -1,5 +1,8 @@
-var chai = require('chai')
-  , passport = require('chai-passport-strategy');
+/* global window */
+const chai = require('chai');
+
+
+const passport = require('chai-passport-strategy');
 
 chai.use(passport);
 

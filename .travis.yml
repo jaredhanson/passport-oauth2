@@ -3,7 +3,7 @@ node_js:
   - "6"
   - "8"
   - "10"
-
+  - "11"
 
 before_install:
   - "npm install make-node@0.3.x -g"
@@ -11,6 +11,7 @@ before_install:
 
 script:
   - "make test-cov"
+  - "npm run-script lint"
 
 after_success:
   - "make report-cov"
