@@ -1,3 +1,17 @@
+# 2.0.0 (2019-02-27)
+
+### Major
+
+* AuthorizationError, InternalOAuthError and TokenError now always have a `message` property
+which will be an empty string if there is no message, previously this was `undefined` @rwky
+
+### Patch
+
+* Updated npm deps @rwky
+* Added node 11 to travis @rwky
+* Linted code using eslint #5 @rwky
+* Added github templates @rwky
+
 # 1.7.1 (2019-02-13)
 
 * Updated npm deps @rwky
