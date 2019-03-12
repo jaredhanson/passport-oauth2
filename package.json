@@ -39,7 +39,7 @@
     "utils-merge": "1.x.x"
   },
   "devDependencies": {
-    "make-node": "0.3.x",
+    "make-node": "0.4.6",
     "mocha": "2.x.x",
     "chai": "2.x.x",
     "chai-passport-strategy": "1.x.x"
