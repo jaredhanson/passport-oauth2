@@ -46,8 +46,8 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
-          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
         });
       }); // that redirects to service provider
       
@@ -77,8 +77,8 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
-          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
         });
         
         it('should preserve other data in session', function() {
@@ -146,8 +146,8 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
-          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
         });
       }); // that redirects to service provider
       
@@ -200,7 +200,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
               req.session = {};
               req.session['oauth2:www.example.com'] = {};
-              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
             })
             .authenticate();
         });
@@ -240,7 +240,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
               req.session = {};
               req.session['oauth2:www.example.com'] = {};
-              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
               req.session['oauth2:www.example.com'].foo = 'bar';
             })
             .authenticate();
@@ -281,7 +281,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK-WRONG';
               req.session = {};
               req.session['oauth2:www.example.com'] = {};
-              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
             })
             .authenticate();
         });
@@ -450,8 +450,8 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:example'].state).to.have.length(24);
-          expect(request.session['oauth2:example'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:example'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:example'].state.handle).to.equal(u.query.state);
         });
       }); // that redirects to service provider
       
@@ -479,7 +479,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
               req.session = {};
               req.session['oauth2:example'] = {};
-              req.session['oauth2:example']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:example']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
             })
             .authenticate();
         });
