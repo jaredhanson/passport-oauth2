@@ -418,9 +418,8 @@ describe('OAuth2Strategy', function() {
 
       before(function(done) {
         chai.passport.use(strategy)
-          .fail(function(e, code) {
-            err = e;
-            err.statusCode = code;
+          .fail(function(i) {
+            info = i;
             done();
           })
           .req(function(req) {
@@ -436,9 +435,8 @@ describe('OAuth2Strategy', function() {
           .authenticate();
       });
 
-      it('should error', function() {
-        expect(err.statusCode).to.equal(403);
-        expect(err.message).to.equal('Unable to load stored code verifier.');
+      it('should not supply info', function() {
+        expect(info).to.be.undefined;
       });
     });
   });
