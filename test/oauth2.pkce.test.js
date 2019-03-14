@@ -72,8 +72,8 @@ describe('OAuth2Strategy', function() {
         var u = uri.parse(url, true);
         expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
         expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
-        expect(request.session['oauth2:www.example.com'].state.verifier).to.have.length(43);
-        expect(request.session['oauth2:www.example.com'].state.verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
       });
     });
 
@@ -97,7 +97,7 @@ describe('OAuth2Strategy', function() {
             req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
             req.session = {};
             req.session['oauth2:www.example.com'] = {};
-            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
+            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', code_verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
           })
           .authenticate();
       });
@@ -184,8 +184,8 @@ describe('OAuth2Strategy', function() {
         var u = uri.parse(url, true);
         expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
         expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
-        expect(request.session['oauth2:www.example.com'].state.verifier).to.have.length(43);
-        expect(request.session['oauth2:www.example.com'].state.verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
       });
     });
 
@@ -209,7 +209,7 @@ describe('OAuth2Strategy', function() {
             req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
             req.session = {};
             req.session['oauth2:www.example.com'] = {};
-            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
+            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', code_verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
           })
           .authenticate();
       });
@@ -297,8 +297,8 @@ describe('OAuth2Strategy', function() {
         var u = uri.parse(url, true);
         expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
         expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
-        expect(request.session['oauth2:www.example.com'].state.verifier).to.have.length(43);
-        expect(request.session['oauth2:www.example.com'].state.verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
       });
     });
 
@@ -322,7 +322,7 @@ describe('OAuth2Strategy', function() {
             req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
             req.session = {};
             req.session['oauth2:www.example.com'] = {};
-            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
+            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', code_verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
           })
           .authenticate();
       });
