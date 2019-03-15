@@ -4,4 +4,5 @@ var chai = require('chai')
 chai.use(passport);
 
 
+global.$require = require('proxyquire');
 global.expect = chai.expect;

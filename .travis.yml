@@ -13,7 +13,6 @@ node_js:
   - "1" # io.js
   - "0.12"
   - "0.10"
-  - "0.8"
 
 
 # NOTE: `istanbul` and `coveralls` are pinned for compatibility with node 0.8.
