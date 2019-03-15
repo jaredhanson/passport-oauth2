@@ -5,6 +5,21 @@ var chai = require('chai')
 
 describe('OAuth2Strategy', function() {
     
+  describe('without state:true option', function() {
+    it('should throw', function() {
+      expect(function() {
+        new OAuth2Strategy({
+          authorizationURL: 'https://www.example.com/oauth2/authorize',
+          tokenURL: 'https://www.example.com/oauth2/token',
+          clientID: 'ABC123',
+          clientSecret: 'secret',
+          callbackURL: 'https://www.example.net/auth/example/callback',
+          pkce: true
+        }, function() {});
+      }).to.throw(TypeError, 'OAuth2Strategy requires `state: true` option when PKCE is enabled');
+    });
+  }); // without a verify callback
+    
   describe('with PKCE true transformation method', function() {
     var mockCrypto = {
       pseudoRandomBytes: function(len) {
