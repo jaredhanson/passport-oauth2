@@ -439,5 +439,207 @@ describe('OAuth2Strategy', function() {
         expect(info).to.be.undefined;
       });
     });
+    
+    describe('that fails due to state being invalid', function() {
+      var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        state: true,
+        pkce: 'S256'
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken == '2YotnFZFEjr1zCsicMWpAA' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA') { 
+          return done(null, { id: '1234' }, { message: 'Hello' });
+        }
+        return done(null, false);
+      });
+      
+      
+      var request
+        , info, status;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i, s) {
+            info = i;
+            status = s;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+          
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK-WRONG';
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', code_verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
+          })
+          .authenticate();
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Invalid authorization request state.');
+      });
+    
+      it('should supply status', function() {
+        expect(status).to.equal(403);
+      });
+    
+      it('should remove state from session', function() {
+        expect(request.session['oauth2:www.example.com']).to.be.undefined;
+      });
+    }); // that fails due to state being invalid
+    
+    describe('that fails due to provider-specific state not found in session', function() {
+      var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        state: true,
+        pkce: 'S256'
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken == '2YotnFZFEjr1zCsicMWpAA' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA') { 
+          return done(null, { id: '1234' }, { message: 'Hello' });
+        }
+        return done(null, false);
+      });
+      
+      
+      var request
+        , info, status;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i, s) {
+            info = i;
+            status = s;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+          
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+            req.session = {};
+          })
+          .authenticate();
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Unable to verify authorization request state.');
+      });
+    
+      it('should supply status', function() {
+        expect(status).to.equal(403);
+      });
+    }); // that fails due to state not found in session
+    
+    describe('that fails due to provider-specific state lacking state value', function() {
+      var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        state: true,
+        pkce: 'S256'
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken == '2YotnFZFEjr1zCsicMWpAA' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA') { 
+          return done(null, { id: '1234' }, { message: 'Hello' });
+        }
+        return done(null, false);
+      });
+      
+      
+      var request
+        , info, status;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .fail(function(i, s) {
+            info = i;
+            status = s;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+          
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+          })
+          .authenticate();
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Unable to verify authorization request state.');
+      });
+    
+      it('should supply status', function() {
+        expect(status).to.equal(403);
+      });
+    }); // that fails due to provider-specific state lacking state value
+    
+    describe('that errors due to lack of session support in app', function() {
+      var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        state: true,
+        pkce: 'S256'
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken == '2YotnFZFEjr1zCsicMWpAA' && refreshToken == 'tGzv3JOkF0XG5Qx2TlKWIA') { 
+          return done(null, { id: '1234' }, { message: 'Hello' });
+        }
+        return done(null, false);
+      });
+      
+      
+      var request
+        , err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+          
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('OAuth 2.0 authentication requires session support when using state. Did you forget to use express-session middleware?');
+      });
+    }); // that errors due to lack of session support in app
+    
   });
 });
