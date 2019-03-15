@@ -43,7 +43,7 @@
     "make-node": "0.4.6",
     "mocha": "2.x.x",
     "chai": "2.x.x",
-    "proxyquire": "1.x.x",
+    "proxyquire": "0.6.x",
     "chai-passport-strategy": "1.x.x"
   },
   "engines": {
