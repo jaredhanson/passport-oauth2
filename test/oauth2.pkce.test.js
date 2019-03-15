@@ -76,6 +76,42 @@ describe('OAuth2Strategy', function() {
         expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
       });
     });
+    
+    describe('that redirects to service provider with other data in session', function() {
+      var request, url;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+            req.session['oauth2:www.example.com'].foo = 'bar';
+          })
+          .authenticate();
+      });
+
+      it('should be redirected', function() {
+        var u = uri.parse(url, true);
+        expect(u.query.state).to.have.length(24);
+      });
+    
+      it('should save state in session', function() {
+        var u = uri.parse(url, true);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+      });
+      
+      it('should preserve other data in session', function() {
+        expect(request.session['oauth2:www.example.com'].foo).to.equal('bar');
+      });
+    }); // that redirects to service provider with other data in session
 
     describe('processing response to authorization request', function() {
       var request
@@ -116,6 +152,69 @@ describe('OAuth2Strategy', function() {
         expect(request.session['oauth2:www.example.com']).to.be.undefined;
       });
     });
+    
+    describe('that was approved with other data in the session', function() {
+      var request
+        , user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+          
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+            req.session = {};
+            req.session['oauth2:www.example.com'] = {};
+            req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', code_verifier: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk' };
+            req.session['oauth2:www.example.com'].foo = 'bar';
+          })
+          .authenticate();
+      });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    
+      it('should preserve other data from session', function() {
+        expect(request.session['oauth2:www.example.com'].state).to.be.undefined;
+        expect(request.session['oauth2:www.example.com'].foo).to.equal('bar');
+      });
+    }); // that was approved with other data in the session
+    
+    describe('that errors due to lack of session support in app', function() {
+      var request, err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error)
+        expect(err.message).to.equal('OAuth 2.0 authentication requires session support when using state. Did you forget to use express-session middleware?');
+      });
+    }); // that errors due to lack of session support in app
   });
     
   describe('with PKCE plain transformation method', function() {
