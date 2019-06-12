@@ -1,6 +1,6 @@
 {
   "name": "@passport-next/passport-oauth2",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "OAuth 2.0 authentication strategy for Passport.",
   "keywords": [
     "passport",
@@ -43,7 +43,7 @@
     "eslint-config-airbnb-base": "13.1.x",
     "eslint-plugin-import": "2.16.x",
     "make-node": "0.3.x",
-    "mocha": "6.x.x"
+    "mocha": "^6.1.4"
   },
   "engines": {
     "node": ">= 6"
