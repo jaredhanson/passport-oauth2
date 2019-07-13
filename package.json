@@ -33,7 +33,7 @@
   "main": "./lib",
   "dependencies": {
     "@passport-next/passport-strategy": "1.1.x",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.14",
     "oauth": "0.9.x"
   },
   "devDependencies": {
