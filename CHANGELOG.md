@@ -1,3 +1,13 @@
+# 2.0.3 (2019-08-27)
+
+* Updated npm deps
+
+# 2.0.2 (2019-07-13)
+
+### Patch
+
+* Updated deps to fix security issue with lodash [here](https://github.com/lodash/lodash/pull/4336) @rwky
+
 # 2.0.1 (2019-06-12)
 
 ### Patch
