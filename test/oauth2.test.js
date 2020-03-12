@@ -109,7 +109,7 @@ describe('OAuth2Strategy', function() {
     }); // with an optionsFunction and no sessionKey
 
     describe('with an optionsFunction and sessionKey', function() {
-      it('should throw', function() {
+      it('should not throw', function() {
         expect(function() {
           new OAuth2Strategy({
             optionsFunction: () => { 
@@ -136,57 +136,6 @@ describe('OAuth2Strategy', function() {
         }).to.throw();
       })
     }); // with an optionsFunction that is not a function type
-
-    describe('with an optionsFunction that does not return authorizationURL', function() {
-      it('should throw', function() {
-        expect(function() {
-          new OAuth2Strategy({
-            optionsFunction: () => { 
-              return {
-                tokenURL: 'https://www.example.com/oauth2/token',
-                clientID: 'ABC123',
-                clientSecret: 'secret'  
-              } 
-            },
-            sessionKey: 'bar'
-          }, function() {});
-        }).to.throw();
-      })
-    }); // with an optionsFunction that does not return authorizationURL
-
-    describe('with an optionsFunction that does not return tokenURL', function() {
-      it('should throw', function() {
-        expect(function() {
-          new OAuth2Strategy({
-            optionsFunction: () => { 
-              return {
-                authorizationURL: 'https://www.example.com/oauth2/authorize',
-                clientID: 'ABC123',
-                clientSecret: 'secret'  
-              } 
-            },
-            sessionKey: 'bar'
-          }, function() {});
-        }).to.throw();
-      })
-    }); // with an optionsFunction that does not return tokenURL
-
-    describe('with an optionsFunction that does not return clientID', function() {
-      it('should throw', function() {
-        expect(function() {
-          new OAuth2Strategy({
-            optionsFunction: () => { 
-              return {
-                authorizationURL: 'https://www.example.com/oauth2/authorize',
-                tokenURL: 'https://www.example.com/oauth2/token',
-                clientSecret: 'secret'  
-              } 
-            },
-            sessionKey: 'bar'
-          }, function() {});
-        }).to.throw();
-      })
-    }); // with an optionsFunction that does not return clientID
 
   }); // constructed
   
@@ -544,6 +493,96 @@ describe('OAuth2Strategy', function() {
         expect(url).to.equal('https://www.example.com/oauth2/authorize?foo=bar&state=foo123&response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     }); // that redirects to authorization server using authorization endpoint that has query parameters including state with state option
+
+    describe('that uses an optionsFunction that does not return authorizationURL', function() {
+      var strategy = new OAuth2Strategy({
+        optionsFunction: () => { 
+          return {
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientID: 'ABC123',
+            clientSecret: 'secret'  
+          } 
+        },
+        sessionKey: 'bar'
+      },
+      function(accessToken, refreshToken, profile, done) {});
+    
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('optionsFunction must return authorizationURL');
+      });
+    }); // that uses an optionsFunction that does not return authorizationURL
+
+    describe('that uses an optionsFunction that does not return tokenURL', function() {
+      var strategy = new OAuth2Strategy({
+        optionsFunction: () => { 
+          return {
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            clientID: 'ABC123',
+            clientSecret: 'secret'  
+          } 
+        },
+        sessionKey: 'bar'
+      },
+      function(accessToken, refreshToken, profile, done) {});
+    
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('optionsFunction must return tokenURL');
+      });
+    }); // that uses an optionsFunction that does not return tokenURL
+
+    describe('that uses an optionsFunction that does not return clientID', function() {
+      var strategy = new OAuth2Strategy({
+        optionsFunction: () => { 
+          return {
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientSecret: 'secret'  
+          } 
+        },
+        sessionKey: 'bar'
+      },
+      function(accessToken, refreshToken, profile, done) {});
+    
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('optionsFunction must return clientID');
+      });
+    }); // that uses an optionsFunction that does not return clientID
 
     describe('that uses an optionsFunction', function() {
       var strategy = new OAuth2Strategy({
