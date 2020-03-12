@@ -496,12 +496,12 @@ describe('OAuth2Strategy', function() {
 
     describe('that uses an optionsFunction that does not return authorizationURL', function() {
       var strategy = new OAuth2Strategy({
-        optionsFunction: () => { 
-          return {
+        optionsFunction: (req, cb) => { 
+          return cb(null, {
             tokenURL: 'https://www.example.com/oauth2/token',
             clientID: 'ABC123',
             clientSecret: 'secret'  
-          } 
+          });
         },
         sessionKey: 'bar'
       },
@@ -526,14 +526,14 @@ describe('OAuth2Strategy', function() {
 
     describe('that uses an optionsFunction that does not return tokenURL', function() {
       var strategy = new OAuth2Strategy({
-        optionsFunction: () => { 
-          return {
+        optionsFunction: (req, cb) => { 
+          return cb(null, {
             authorizationURL: 'https://www.example.com/oauth2/authorize',
             clientID: 'ABC123',
             clientSecret: 'secret'  
-          } 
+          });
         },
-        sessionKey: 'bar'
+        sessionKey: 'bar',
       },
       function(accessToken, refreshToken, profile, done) {});
     
@@ -556,12 +556,12 @@ describe('OAuth2Strategy', function() {
 
     describe('that uses an optionsFunction that does not return clientID', function() {
       var strategy = new OAuth2Strategy({
-        optionsFunction: () => { 
-          return {
+        optionsFunction: (req, cb) => { 
+          return cb(null, {
             authorizationURL: 'https://www.example.com/oauth2/authorize',
             tokenURL: 'https://www.example.com/oauth2/token',
             clientSecret: 'secret'  
-          } 
+          });
         },
         sessionKey: 'bar'
       },
@@ -586,16 +586,16 @@ describe('OAuth2Strategy', function() {
 
     describe('that uses an optionsFunction', function() {
       var strategy = new OAuth2Strategy({
-        optionsFunction: (req) => { 
-          return {
+        optionsFunction: (req, cb) => { 
+          return cb(null, {
             authorizationURL: 'https://www.example.com/oauth2/authorize',
             tokenURL: 'https://www.example.com/oauth2/token',
             clientID: 'ABC123',
             clientSecret: 'secret'  
-          } 
+          });
         },
         callbackURL: 'https://www.example.net/auth/example/callback',
-        sessionKey: 'bar',        
+        sessionKey: 'bar',
       },
       function(accessToken, refreshToken, profile, done) {});
       
@@ -729,13 +729,13 @@ describe('OAuth2Strategy', function() {
 
     describe('that was approved with redirect URI using options function', function() {
       var strategy = new OAuth2Strategy({
-        optionsFunction: (req) => { 
-          return {
+        optionsFunction: (req, cb) => { 
+          return cb(null, {
             authorizationURL: 'https://www.example.com/oauth2/authorize',
             tokenURL: 'https://www.example.com/oauth2/token',
             clientID: 'ABC123',
             clientSecret: 'secret'  
-          } 
+          });
         },
         callbackURL: 'https://www.example.net/auth/example/callback',
         sessionKey: 'bar',        
