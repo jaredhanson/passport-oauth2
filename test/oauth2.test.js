@@ -90,7 +90,104 @@ describe('OAuth2Strategy', function() {
         }).to.throw(TypeError, 'OAuth2Strategy requires a authorizationURL option');
       });
     }); // with only a verify callback
-    
+
+    describe('with an optionsFunction and no sessionKey', function() {
+      it('should throw', function() {
+        expect(function() {
+          new OAuth2Strategy({
+            optionsFunction: () => { 
+              return {
+                authorizationURL: 'https://www.example.com/oauth2/authorize',
+                tokenURL: 'https://www.example.com/oauth2/token',
+                clientID: 'ABC123',
+                clientSecret: 'secret'  
+              } 
+            }
+          }, function() {});
+        }).to.throw();
+      })
+    }); // with an optionsFunction and no sessionKey
+
+    describe('with an optionsFunction and sessionKey', function() {
+      it('should throw', function() {
+        expect(function() {
+          new OAuth2Strategy({
+            optionsFunction: () => { 
+              return {
+                authorizationURL: 'https://www.example.com/oauth2/authorize',
+                tokenURL: 'https://www.example.com/oauth2/token',
+                clientID: 'ABC123',
+                clientSecret: 'secret'  
+              } 
+            },
+            sessionKey: 'bar'
+          }, function() {});
+        }).to.not.throw();
+      })
+    }); // with an optionsFunction and sessionKey
+
+    describe('with an optionsFunction that is not a function type', function() {
+      it('should throw', function() {
+        expect(function() {
+          new OAuth2Strategy({
+            optionsFunction: 'foo',
+            sessionKey: 'bar'
+          }, function() {});
+        }).to.throw();
+      })
+    }); // with an optionsFunction that is not a function type
+
+    describe('with an optionsFunction that does not return authorizationURL', function() {
+      it('should throw', function() {
+        expect(function() {
+          new OAuth2Strategy({
+            optionsFunction: () => { 
+              return {
+                tokenURL: 'https://www.example.com/oauth2/token',
+                clientID: 'ABC123',
+                clientSecret: 'secret'  
+              } 
+            },
+            sessionKey: 'bar'
+          }, function() {});
+        }).to.throw();
+      })
+    }); // with an optionsFunction that does not return authorizationURL
+
+    describe('with an optionsFunction that does not return tokenURL', function() {
+      it('should throw', function() {
+        expect(function() {
+          new OAuth2Strategy({
+            optionsFunction: () => { 
+              return {
+                authorizationURL: 'https://www.example.com/oauth2/authorize',
+                clientID: 'ABC123',
+                clientSecret: 'secret'  
+              } 
+            },
+            sessionKey: 'bar'
+          }, function() {});
+        }).to.throw();
+      })
+    }); // with an optionsFunction that does not return tokenURL
+
+    describe('with an optionsFunction that does not return clientID', function() {
+      it('should throw', function() {
+        expect(function() {
+          new OAuth2Strategy({
+            optionsFunction: () => { 
+              return {
+                authorizationURL: 'https://www.example.com/oauth2/authorize',
+                tokenURL: 'https://www.example.com/oauth2/token',
+                clientSecret: 'secret'  
+              } 
+            },
+            sessionKey: 'bar'
+          }, function() {});
+        }).to.throw();
+      })
+    }); // with an optionsFunction that does not return clientID
+
   }); // constructed
   
   
@@ -447,7 +544,40 @@ describe('OAuth2Strategy', function() {
         expect(url).to.equal('https://www.example.com/oauth2/authorize?foo=bar&state=foo123&response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
       });
     }); // that redirects to authorization server using authorization endpoint that has query parameters including state with state option
-    
+
+    describe('that uses an optionsFunction', function() {
+      var strategy = new OAuth2Strategy({
+        optionsFunction: (req) => { 
+          return {
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientID: 'ABC123',
+            clientSecret: 'secret'  
+          } 
+        },
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        sessionKey: 'bar',        
+      },
+      function(accessToken, refreshToken, profile, done) {});
+      
+      var url;
+  
+      before(function(done) {
+        chai.passport.use(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+          })
+          .authenticate();
+      });
+  
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+      });
+    }); // that uses an optionsFunction
+
   }); // issuing authorization request
   
   
@@ -476,7 +606,6 @@ describe('OAuth2Strategy', function() {
         
         return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
       }
-      
       
       var user
         , info;
@@ -531,7 +660,6 @@ describe('OAuth2Strategy', function() {
         return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
       }
       
-      
       var user
         , info;
 
@@ -559,6 +687,64 @@ describe('OAuth2Strategy', function() {
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved with redirect URI
+
+    describe('that was approved with redirect URI using options function', function() {
+      var strategy = new OAuth2Strategy({
+        optionsFunction: (req) => { 
+          return {
+            authorizationURL: 'https://www.example.com/oauth2/authorize',
+            tokenURL: 'https://www.example.com/oauth2/token',
+            clientID: 'ABC123',
+            clientSecret: 'secret'  
+          } 
+        },
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        sessionKey: 'bar',        
+      },
+      function(accessToken, refreshToken, profile, done) {
+        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
+        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
+        if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
+        if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
+    
+        return done(null, { id: '1234' }, { message: 'Hello' });
+      });
+      
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
+        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
+        
+        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
+      }
+      
+      var user
+        , info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            user = u;
+            info = i;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should supply user', function() {
+        expect(user).to.be.an.object;
+        expect(user.id).to.equal('1234');
+      });
+
+      it('should supply info', function() {
+        expect(info).to.be.an.object;
+        expect(info.message).to.equal('Hello');
+      });
+    }); // that was approved with redirect URI using optionsFunction
     
     describe('that was approved with redirect URI option', function() {
       var strategy = new OAuth2Strategy({

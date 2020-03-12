@@ -54,6 +54,38 @@ passport.use(new OAuth2Strategy({
 ));
 ```
 
+#### Alternate Strategy Config for Multi-Tenant Environments
+
+This strategy can be used to support dynamic options in a multi-tenant
+environment, by providing an `optionsFunction` to the constructor:
+
+```js
+passport.use(new OAuth2Strategy({
+    optionsFunction: (req) => {
+      return Tenant.find(req.hostname).then(tenant => {
+        return {
+            authorizationURL: tenant.oauth.authorizationURL,
+            tokenURL: tenant.oauth.tokenURL,
+            clientID: tenant.oauth.clientID,
+            clientSecret: tenant.oauth.clientSecret
+        }
+      });
+    },
+    callbackURL: "/auth/example/callback", // note: relative paths are allowed
+    sessionKey: 'bar'
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ exampleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
+```
+
+Note: `authorizationURL`, `tokenURL` and `clientID` must be returned by
+optionsFunction, and `callbackURL` and a `sessionKey` must be provided in
+the options object.
+
 #### Authenticate Requests
 
 Use `passport.authenticate()`, specifying the `'oauth2'` strategy, to
