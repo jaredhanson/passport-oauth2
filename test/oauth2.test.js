@@ -726,64 +726,6 @@ describe('OAuth2Strategy', function() {
         expect(info.message).to.equal('Hello');
       });
     }); // that was approved with redirect URI
-
-    describe('that was approved with redirect URI using options function', function() {
-      var strategy = new OAuth2Strategy({
-        optionsFunction: (req, cb) => { 
-          return cb(null, {
-            authorizationURL: 'https://www.example.com/oauth2/authorize',
-            tokenURL: 'https://www.example.com/oauth2/token',
-            clientID: 'ABC123',
-            clientSecret: 'secret'  
-          });
-        },
-        callbackURL: 'https://www.example.net/auth/example/callback',
-        sessionKey: 'bar',        
-      },
-      function(accessToken, refreshToken, profile, done) {
-        if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
-        if (refreshToken !== 'tGzv3JOkF0XG5Qx2TlKWIA') { return done(new Error('incorrect refreshToken argument')); }
-        if (typeof profile !== 'object') { return done(new Error('incorrect profile argument')); }
-        if (Object.keys(profile).length !== 0) { return done(new Error('incorrect profile argument')); }
-    
-        return done(null, { id: '1234' }, { message: 'Hello' });
-      });
-      
-      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
-        if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
-        if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
-        if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
-        
-        return callback(null, '2YotnFZFEjr1zCsicMWpAA', 'tGzv3JOkF0XG5Qx2TlKWIA', { token_type: 'example' });
-      }
-      
-      var user
-        , info;
-
-      before(function(done) {
-        chai.passport.use(strategy)
-          .success(function(u, i) {
-            user = u;
-            info = i;
-            done();
-          })
-          .req(function(req) {
-            req.query = {};
-            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
-          })
-          .authenticate();
-      });
-
-      it('should supply user', function() {
-        expect(user).to.be.an.object;
-        expect(user.id).to.equal('1234');
-      });
-
-      it('should supply info', function() {
-        expect(info).to.be.an.object;
-        expect(info.message).to.equal('Hello');
-      });
-    }); // that was approved with redirect URI using optionsFunction
     
     describe('that was approved with redirect URI option', function() {
       var strategy = new OAuth2Strategy({
