@@ -211,6 +211,44 @@ describe('OAuth2Strategy', function() {
         expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=email&client_id=ABC123');
       });
     }); // that redirects to service provider with scope option
+
+    describe('that redirects to service provider with custom redirect on authenticate', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+
+      var url;
+      var user;
+      var info;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .success(function(u, i) {
+            console.log(u, i)
+          })
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+          })
+          .authenticate({
+            redirect: function(strategy, location) {
+              strategy.redirect(location, 200)
+            },
+          }
+        );
+      });
+
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&client_id=ABC123');
+      });
+    }); // that redirects to service provider with custom redirect on authenticate
     
     describe('that redirects to service provider with scope option as array', function() {
       var strategy = new OAuth2Strategy({
