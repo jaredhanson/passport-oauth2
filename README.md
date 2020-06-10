@@ -24,7 +24,7 @@ list so other people can find it.
 <p align="center">
   <sup>Advertisement</sup>
   <br>
-  <a href="https://click.linksynergy.com/link?id=D*o7yui4/NM&offerid=507388.380582&type=2&murl=https%3A%2F%2Fwww.udemy.com%2Fcourse%2Flearn-oauth-2%2F&u1=5I2riUEiNIRjPjdjxj6X4exzu3lhRkWY0et6Y8eyT3">Learn OAuth 2.0</a><br>Get started as an API Security Expert
+  <a href="https://click.linksynergy.com/link?id=D*o7yui4/NM&offerid=507388.380582&type=2&murl=https%3A%2F%2Fwww.udemy.com%2Fcourse%2Flearn-oauth-2%2F&u1=5I2riUEiNIRjPjdjxj6X4exzu3lhRkWY0et6Y8eyT3">Learn OAuth 2.0 - Get started as an API Security Expert</a><br>Just imagine what could happen to YOUR professional career if you had skills in OAuth > 8500 satisfied students
 </p>
 
 ---
