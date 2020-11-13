@@ -128,6 +128,38 @@ describe('OAuth2Strategy', function() {
       });
     }); // that redirects to service provider with other data in session
 
+    describe('that redirects to service provider with state option', function() {
+      var request, url;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            req.session = {};
+          })
+          .authenticate({state: "DkbychwKu8kBaJoLE5yeR5NK"});
+      });
+
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&code_challenge_method=S256&state=DkbychwKu8kBaJoLE5yeR5NK&client_id=ABC123');
+        var u = uri.parse(url, true);
+        expect(u.query.state).to.have.length(24);
+      });
+
+      it('should save state in session', function() {
+        var u = uri.parse(url, true);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+      });
+
+    }); // that redirects to service provider with state option
+
     describe('processing response to authorization request', function() {
       var request
         , user

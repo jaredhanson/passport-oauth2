@@ -50,6 +50,36 @@ describe('OAuth2Strategy', function() {
           expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
         });
       }); // that redirects to service provider
+
+      describe('that redirects to service provider with state option', function() {
+        var request, url;
+
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({state: "DkbychwKu8kBaJoLE5yeR5NK"});
+        });
+
+        it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&state=DkbychwKu8kBaJoLE5yeR5NK&client_id=ABC123');
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+
+          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+        });
+      }); // that redirects to service provider with state option
       
       describe('that redirects to service provider with other data in session', function() {
         var request, url;
