@@ -9,7 +9,7 @@ var OAuth2Strategy = require('../lib/strategy')
   // TODO: rename this file to oauth2.state.nonce
 describe('OAuth2Strategy', function() {
   
-  describe('using default session state store', function() {
+  describe('using default session state store through store option', function() {
     
     describe('issuing authorization request', function() {
       var strategy = new OAuth2Strategy({
@@ -18,7 +18,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true
+        store: true
       },
       function(accessToken, refreshToken, profile, done) {});
       
@@ -46,11 +46,102 @@ describe('OAuth2Strategy', function() {
       
         it('should save state in session', function() {
           var u = uri.parse(url, true);
-        
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
-          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.be.undefined;
         });
       }); // that redirects to service provider
+      
+      describe('that redirects to service provider with state', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({ state: { returnTo: '/somewhere' } });
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.deep.equal({ returnTo: '/somewhere' });
+        });
+      }); // that redirects to service provider with state
+      
+      describe('that redirects to service provider with state set to boolean true', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({ state: true });
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.equal(true);
+        });
+      }); // that redirects to service provider with state set to boolean true
+      
+      describe('that redirects to service provider with state set to boolean false', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({ state: false });
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.be.undefined;
+        });
+      }); // that redirects to service provider with state set to boolean false
       
       describe('that redirects to service provider with other data in session', function() {
         var request, url;
@@ -78,8 +169,9 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
-          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.be.undefined;
         });
         
         it('should preserve other data in session', function() {
@@ -117,7 +209,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true
+        store: true
       },
       function(accessToken, refreshToken, profile, done) {});
       
@@ -147,8 +239,8 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:www.example.com'].state).to.have.length(24);
-          expect(request.session['oauth2:www.example.com'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
         });
       }); // that redirects to service provider
       
@@ -161,7 +253,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true
+        store: true
       },
       function(accessToken, refreshToken, profile, done) {
         if (accessToken !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect accessToken argument')); }
@@ -201,7 +293,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
               req.session = {};
               req.session['oauth2:www.example.com'] = {};
-              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
             })
             .authenticate();
         });
@@ -214,12 +306,54 @@ describe('OAuth2Strategy', function() {
         it('should supply info', function() {
           expect(info).to.be.an.object;
           expect(info.message).to.equal('Hello');
+          expect(info.state).to.be.undefined;
         });
       
         it('should remove state from session', function() {
           expect(request.session['oauth2:www.example.com']).to.be.undefined;
         });
       }); // that was approved
+      
+      describe('that was approved with state', function() {
+        var request
+          , user
+          , info;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .success(function(u, i) {
+              user = u;
+              info = i;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+            
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+              req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session = {};
+              req.session['oauth2:www.example.com'] = {};
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', state: { returnTo: '/somewhere' } };
+            })
+            .authenticate();
+        });
+  
+        it('should supply user', function() {
+          expect(user).to.be.an.object;
+          expect(user.id).to.equal('1234');
+        });
+  
+        it('should supply info', function() {
+          expect(info).to.be.an.object;
+          expect(info.message).to.equal('Hello');
+          expect(info.state).to.deep.equal({ returnTo: '/somewhere' });
+        });
+      
+        it('should remove state from session', function() {
+          expect(request.session['oauth2:www.example.com']).to.be.undefined;
+        });
+      }); // that was approved with state
       
       describe('that was approved with other data in the session', function() {
         var request
@@ -241,7 +375,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
               req.session = {};
               req.session['oauth2:www.example.com'] = {};
-              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
               req.session['oauth2:www.example.com'].foo = 'bar';
             })
             .authenticate();
@@ -282,7 +416,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK-WRONG';
               req.session = {};
               req.session['oauth2:www.example.com'] = {};
-              req.session['oauth2:www.example.com']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
             })
             .authenticate();
         });
@@ -397,14 +531,14 @@ describe('OAuth2Strategy', function() {
   }); // using default session state store
   
   
-  describe('using default session state store with session key option', function() {
+  describe('using default session state store through store option with session key option', function() {
     var strategy = new OAuth2Strategy({
       authorizationURL: 'https://www.example.com/oauth2/authorize',
       tokenURL: 'https://www.example.com/oauth2/token',
       clientID: 'ABC123',
       clientSecret: 'secret',
       callbackURL: 'https://www.example.net/auth/example/callback',
-      state: true,
+      store: true,
       sessionKey: 'oauth2:example'
     },
     function(accessToken, refreshToken, profile, done) {
@@ -451,8 +585,9 @@ describe('OAuth2Strategy', function() {
         it('should save state in session', function() {
           var u = uri.parse(url, true);
         
-          expect(request.session['oauth2:example'].state).to.have.length(24);
-          expect(request.session['oauth2:example'].state).to.equal(u.query.state);
+          expect(request.session['oauth2:example'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:example'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:example'].state.state).to.be.undefined;
         });
       }); // that redirects to service provider
       
@@ -480,7 +615,7 @@ describe('OAuth2Strategy', function() {
               req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
               req.session = {};
               req.session['oauth2:example'] = {};
-              req.session['oauth2:example']['state'] = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session['oauth2:example']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK' };
             })
             .authenticate();
         });

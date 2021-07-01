@@ -5,22 +5,7 @@ var chai = require('chai')
 
 describe('OAuth2Strategy', function() {
     
-  describe('without state:true option', function() {
-    it('should throw', function() {
-      expect(function() {
-        new OAuth2Strategy({
-          authorizationURL: 'https://www.example.com/oauth2/authorize',
-          tokenURL: 'https://www.example.com/oauth2/token',
-          clientID: 'ABC123',
-          clientSecret: 'secret',
-          callbackURL: 'https://www.example.net/auth/example/callback',
-          pkce: true
-        }, function() {});
-      }).to.throw(TypeError, 'OAuth2Strategy requires `state: true` option when PKCE is enabled');
-    });
-  }); // without a verify callback
-    
-  describe('with PKCE true transformation method', function() {
+  describe('with store and PKCE true transformation method', function() {
     var mockCrypto = {
       pseudoRandomBytes: function(len) {
         if (len !== 32) { throw new Error('xyz'); }
@@ -40,7 +25,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: true
       },
       function(accessToken, refreshToken, profile, done) {
@@ -127,7 +112,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
-    describe('handling a request to be redirected for authorization with state set to boolean true', function() {
+    describe('handling a request to be redirected for authorization with state as boolean true', function() {
       var request, url;
 
       before(function(done) {
@@ -161,7 +146,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
-    describe('handling a request to be redirected for authorization with state set to boolean false', function() {
+    describe('handling a request to be redirected for authorization with state as boolean false', function() {
       var request, url;
 
       before(function(done) {
@@ -377,7 +362,7 @@ describe('OAuth2Strategy', function() {
     }); // that errors due to lack of session support in app
   });
     
-  describe('with PKCE plain transformation method', function() {
+  describe('with store and PKCE plain transformation method', function() {
     var mockCrypto = {
       pseudoRandomBytes: function(len) {
         if (len !== 32) { throw new Error('xyz'); }
@@ -396,7 +381,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'plain'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -489,7 +474,7 @@ describe('OAuth2Strategy', function() {
     });
   });
   
-  describe('with PKCE S256 transformation method', function() {
+  describe('with store and PKCE S256 transformation method', function() {
     var mockCrypto = {
       pseudoRandomBytes: function(len) {
         if (len !== 32) { throw new Error('xyz'); }
@@ -509,7 +494,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'S256'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -615,7 +600,7 @@ describe('OAuth2Strategy', function() {
       }
     }
 
-    describe('with unknown encoding method', function() {
+    describe('with store and unknown encoding method', function() {
 
       var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
       var strategy = new OAuth2Strategy({
@@ -624,7 +609,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'unknown'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -654,7 +639,7 @@ describe('OAuth2Strategy', function() {
       });
     });
 
-    describe('with unknown verifier', function() {
+    describe('with store and unknown verifier', function() {
 
       var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
       var strategy = new OAuth2Strategy({
@@ -663,7 +648,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'S256'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -699,7 +684,7 @@ describe('OAuth2Strategy', function() {
       });
     });
     
-    describe('that fails due to state being invalid', function() {
+    describe('store and that fails due to state being invalid', function() {
       var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -707,7 +692,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'S256'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -755,7 +740,7 @@ describe('OAuth2Strategy', function() {
       });
     }); // that fails due to state being invalid
     
-    describe('that fails due to provider-specific state not found in session', function() {
+    describe('store and that fails due to provider-specific state not found in session', function() {
       var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -763,7 +748,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'S256'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -805,7 +790,7 @@ describe('OAuth2Strategy', function() {
       });
     }); // that fails due to state not found in session
     
-    describe('that fails due to provider-specific state lacking state value', function() {
+    describe('store and that fails due to provider-specific state lacking state value', function() {
       var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -813,7 +798,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'S256'
       },
       function(accessToken, refreshToken, profile, done) {
@@ -856,7 +841,7 @@ describe('OAuth2Strategy', function() {
       });
     }); // that fails due to provider-specific state lacking state value
     
-    describe('that errors due to lack of session support in app', function() {
+    describe('store and that errors due to lack of session support in app', function() {
       var OAuth2Strategy = require('proxyquire')('../lib/strategy', { crypto: mockCrypto });
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
@@ -864,7 +849,7 @@ describe('OAuth2Strategy', function() {
         clientID: 'ABC123',
         clientSecret: 'secret',
         callbackURL: 'https://www.example.net/auth/example/callback',
-        state: true,
+        store: true,
         pkce: 'S256'
       },
       function(accessToken, refreshToken, profile, done) {
