@@ -53,6 +53,36 @@ describe('OAuth2Strategy', function() {
         });
       }); // that redirects to service provider
       
+      describe('that redirects to service provider with state', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({ state: { returnTo: '/somewhere' } });
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.deep.equal({ returnTo: '/somewhere' });
+        });
+      }); // that redirects to service provider with state
+      
       describe('that redirects to service provider with other data in session', function() {
         var request, url;
   
@@ -216,12 +246,54 @@ describe('OAuth2Strategy', function() {
         it('should supply info', function() {
           expect(info).to.be.an.object;
           expect(info.message).to.equal('Hello');
+          expect(info.state).to.be.undefined;
         });
       
         it('should remove state from session', function() {
           expect(request.session['oauth2:www.example.com']).to.be.undefined;
         });
       }); // that was approved
+      
+      describe('that was approved with state', function() {
+        var request
+          , user
+          , info;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .success(function(u, i) {
+              user = u;
+              info = i;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+            
+              req.query = {};
+              req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+              req.query.state = 'DkbychwKu8kBaJoLE5yeR5NK';
+              req.session = {};
+              req.session['oauth2:www.example.com'] = {};
+              req.session['oauth2:www.example.com']['state'] = { handle: 'DkbychwKu8kBaJoLE5yeR5NK', state: { returnTo: '/somewhere' } };
+            })
+            .authenticate();
+        });
+  
+        it('should supply user', function() {
+          expect(user).to.be.an.object;
+          expect(user.id).to.equal('1234');
+        });
+  
+        it('should supply info', function() {
+          expect(info).to.be.an.object;
+          expect(info.message).to.equal('Hello');
+          expect(info.state).to.deep.equal({ returnTo: '/somewhere' });
+        });
+      
+        it('should remove state from session', function() {
+          expect(request.session['oauth2:www.example.com']).to.be.undefined;
+        });
+      }); // that was approved with state
       
       describe('that was approved with other data in the session', function() {
         var request
