@@ -127,6 +127,74 @@ describe('OAuth2Strategy', function() {
       });
     });
     
+    describe('handling a request to be redirected for authorization with state set to boolean true', function() {
+      var request, url;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            req.session = {};
+          })
+          .authenticate({ state: true });
+      });
+
+      it('should be redirected', function() {
+        var u = uri.parse(url, true);
+        expect(u.query.state).to.have.length(24);
+        expect(u.query.code_challenge).to.have.length(43);
+        expect(u.query.code_challenge).to.equal('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM')
+        expect(u.query.code_challenge_method).to.equal('S256');
+      });
+    
+      it('should save verifier in session', function() {
+        var u = uri.parse(url, true);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+        expect(request.session['oauth2:www.example.com'].state.state).to.equal(true);
+      });
+    });
+    
+    describe('handling a request to be redirected for authorization with state set to boolean false', function() {
+      var request, url;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+            request = req;
+            req.session = {};
+          })
+          .authenticate({ state: false });
+      });
+
+      it('should be redirected', function() {
+        var u = uri.parse(url, true);
+        expect(u.query.state).to.have.length(24);
+        expect(u.query.code_challenge).to.have.length(43);
+        expect(u.query.code_challenge).to.equal('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM')
+        expect(u.query.code_challenge_method).to.equal('S256');
+      });
+    
+      it('should save verifier in session', function() {
+        var u = uri.parse(url, true);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+        expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.have.length(43);
+        expect(request.session['oauth2:www.example.com'].state.code_verifier).to.equal('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
+        expect(request.session['oauth2:www.example.com'].state.state).to.be.undefined;
+      });
+    });
+    
     describe('that redirects to service provider with other data in session', function() {
       var request, url;
 

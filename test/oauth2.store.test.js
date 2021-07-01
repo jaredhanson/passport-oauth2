@@ -83,6 +83,66 @@ describe('OAuth2Strategy', function() {
         });
       }); // that redirects to service provider with state
       
+      describe('that redirects to service provider with state set to boolean true', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({ state: true });
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.equal(true);
+        });
+      }); // that redirects to service provider with state set to boolean true
+      
+      describe('that redirects to service provider with state set to boolean false', function() {
+        var request, url;
+  
+        before(function(done) {
+          chai.passport.use(strategy)
+            .redirect(function(u) {
+              url = u;
+              done();
+            })
+            .req(function(req) {
+              request = req;
+              req.session = {};
+            })
+            .authenticate({ state: false });
+        });
+  
+        it('should be redirected', function() {
+          var u = uri.parse(url, true);
+          expect(u.query.state).to.have.length(24);
+        });
+      
+        it('should save state in session', function() {
+          var u = uri.parse(url, true);
+          
+          expect(request.session['oauth2:www.example.com'].state.handle).to.have.length(24);
+          expect(request.session['oauth2:www.example.com'].state.handle).to.equal(u.query.state);
+          expect(request.session['oauth2:www.example.com'].state.state).to.be.undefined;
+        });
+      }); // that redirects to service provider with state set to boolean false
+      
       describe('that redirects to service provider with other data in session', function() {
         var request, url;
   
