@@ -6,6 +6,7 @@ var OAuth2Strategy = require('../lib/strategy')
   , uri = require('url');
 
 
+  // TODO: renam ethis file to oauth2.store.custom
 describe('OAuth2Strategy', function() {
   
   describe('with custom state store that accepts meta argument', function() {

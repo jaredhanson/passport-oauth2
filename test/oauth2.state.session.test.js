@@ -6,6 +6,7 @@ var OAuth2Strategy = require('../lib/strategy')
   , uri = require('url');
 
 
+  // TODO: rename this file to oauth2.state.nonce
 describe('OAuth2Strategy', function() {
   
   describe('using default session state store', function() {
