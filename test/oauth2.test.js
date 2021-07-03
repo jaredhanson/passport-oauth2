@@ -270,6 +270,35 @@ describe('OAuth2Strategy', function() {
         expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=permission_1%2Cpermission_2&client_id=ABC123');
       });
     }); // that redirects to service provider with scope option as array using non-standard separator
+
+    describe('that redirects to service provider with scope option from constructor', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+        scope: 'profile',
+      },
+      function(accessToken, refreshToken, profile, done) {});
+
+      var url;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .redirect(function(u) {
+            url = u;
+            done();
+          })
+          .req(function(req) {
+          })
+          .authenticate({ scope: 'email' });
+      });
+
+      it('should be redirected', function() {
+        expect(url).to.equal('https://www.example.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fwww.example.net%2Fauth%2Fexample%2Fcallback&scope=email%20profile&client_id=ABC123');
+      });
+    }); // that redirects to service provider with scope option from constructor
     
     describe('that redirects to service provider with state option', function() {
       var strategy = new OAuth2Strategy({
