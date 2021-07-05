@@ -17,12 +17,18 @@
     "email": "jaredhanson@gmail.com",
     "url": "http://www.jaredhanson.net/"
   },
+  "contributors": [
+     {
+        "name": "Michael Demoret",
+        "email": "mdemoret@gmail.com"
+     }
+  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/jaredhanson/passport-oauth2.git"
+    "url": "git://github.com/mdemoret/passport-oauth2.git"
   },
   "bugs": {
-    "url": "http://github.com/jaredhanson/passport-oauth2/issues"
+    "url": "http://github.com/mdemoret/passport-oauth2/issues"
   },
   "funding": {
     "type": "github",
@@ -55,5 +61,6 @@
   },
   "scripts": {
     "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js test/**/*.test.js"
-  }
+  },
+  "typings": "lib/passport-oauth2.d.ts"
 }
