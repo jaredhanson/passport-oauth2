@@ -83,8 +83,8 @@ describe('OAuth2Strategy subclass', function() {
     }
     util.inherits(FooOAuth2Strategy, OAuth2Strategy);
 
-    FooOAuth2Strategy.prototype.tokenParams = function(options) {
-      return { type: options.type };
+    FooOAuth2Strategy.prototype.tokenParams = function(options, callbackQuery) {
+      return { type: options.type, customParam: callbackQuery.customParam };
     }
     
     
@@ -106,6 +106,7 @@ describe('OAuth2Strategy subclass', function() {
       strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
         if (code !== 'SplxlOBeZQQYbYS6WxSbIA') { return callback(new Error('incorrect code argument')); }
         if (options.grant_type !== 'authorization_code') { return callback(new Error('incorrect options.grant_type argument')); }
+        if (options.customParam !== 'custom') { return callback(new Error('incorrect options.customParam argument')); }
         if (options.redirect_uri !== 'https://www.example.net/auth/example/callback') { return callback(new Error('incorrect options.redirect_uri argument')); }
         if (options.type !== 'web_server') { return callback(new Error('incorrect options.type argument')); }
         
@@ -126,6 +127,7 @@ describe('OAuth2Strategy subclass', function() {
           .req(function(req) {
             req.query = {};
             req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+            req.query.customParam = 'custom';
           })
           .authenticate({ type: 'web_server' });
       });
