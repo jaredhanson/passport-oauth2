@@ -19,6 +19,13 @@ that is not already supported are encouraged to sub-class this strategy.  If you
 choose to open source the new provider-specific strategy, please add it to the
 list so other people can find it.
 
+<div align="center">
+
+:brain: [Understanding OAuth 2.0](https://www.passportjs.org/concepts/oauth2/?utm_source=github&utm_medium=referral&utm_campaign=passport-oauth2&utm_content=nav-concept) •
+:heart: [Sponsors](https://www.passportjs.org/sponsors/?utm_source=github&utm_medium=referral&utm_campaign=passport-oauth2&utm_content=nav-sponsors)
+
+</div>
+
 ---
 
 <p align="center">
