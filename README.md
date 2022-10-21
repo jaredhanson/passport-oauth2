@@ -1,12 +1,12 @@
 # passport-oauth2
 
-General-purpose OAuth 2.0 authentication strategy for [Passport](http://passportjs.org/).
+General-purpose OAuth 2.0 authentication strategy for [Passport](https://www.passportjs.org/).
 
 This module lets you authenticate using OAuth 2.0 in your Node.js applications.
-By plugging into Passport, OAuth 2.0 authentication can be easily and
+By plugging into Passport, OAuth 2.0-based sign in can be easily and
 unobtrusively integrated into any application or framework that supports
-[Connect](http://www.senchalabs.org/connect/)-style middleware, including
-[Express](http://expressjs.com/).
+[Connect](https://github.com/senchalabs/connect#readme)-style middleware, including
+[Express](https://expressjs.com/).
 
 Note that this strategy provides generic OAuth 2.0 support.  In many cases, a
 provider-specific strategy can be used instead, which cuts down on unnecessary
