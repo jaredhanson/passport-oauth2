@@ -1176,7 +1176,7 @@ describe('OAuth2Strategy', function() {
       });
     }); // that errors due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body
 
-    describe('that does not error but has result body with error due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body', function() {
+    describe('that does not error but has result body with error due to token request error, in parsed node-oauth object form with OAuth 2.0-compatible body', function() {
       var strategy = new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
         tokenURL: 'https://www.example.com/oauth2/token',
