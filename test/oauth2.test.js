@@ -1175,6 +1175,50 @@ describe('OAuth2Strategy', function() {
         expect(err.oauthError).to.be.undefined;
       });
     }); // that errors due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body
+
+    describe('that does not error but has result body with error due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body', function() {
+      var strategy = new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: 'ABC123',
+        clientSecret: 'secret',
+        callbackURL: 'https://www.example.net/auth/example/callback',
+      },
+      function(accessToken, refreshToken, params, profile, done) {
+        return done(new Error('verify callback should not be called'));
+      });
+
+      strategy._oauth2.getOAuthAccessToken = function(code, options, callback) {
+        return callback(null, undefined, undefined, {
+          error: "redirect_uri_mismatch",
+          error_description: "The redirect_uri MUST match the registered callback URL for this application.",
+          error_uri: "/apps/managing-oauth-apps/troubleshooting-authorization-request-errors/#redirect-uri-mismatch2"
+        })
+      }
+
+
+      var err;
+
+      before(function(done) {
+        chai.passport.use(strategy)
+          .error(function(e) {
+            err = e;
+            done();
+          })
+          .req(function(req) {
+            req.query = {};
+            req.query.code = 'SplxlOBeZQQYbYS6WxSbIA';
+          })
+          .authenticate();
+      });
+
+      it('should error', function() {
+        expect(err).to.be.an.instanceof(TokenError)
+        expect(err.message).to.equal('The redirect_uri MUST match the registered callback URL for this application.');
+        expect(err.code).to.equal('redirect_uri_mismatch');
+        expect(err.oauthError).to.be.undefined;
+      });
+    }); // that errors due to token request error, in node-oauth object literal form with OAuth 2.0-compatible body
     
     describe('that errors due to token request error, in node-oauth object literal form with JSON body', function() {
       var strategy = new OAuth2Strategy({
