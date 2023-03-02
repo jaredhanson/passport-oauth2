@@ -20,4 +20,4 @@ a state store capable of storing application-level state.
 persisted in the session by state store.
 - `callbackURL` property added to metadata passed to state store.
 
-[Unreleased]: https://github.com/jaredhanson/passport-oauth2/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/jaredhanson/passport-oauth2/compare/v1.6.1...HEAD
