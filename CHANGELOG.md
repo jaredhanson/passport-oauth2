@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2023-03-02
+### Added
+
+- Support for authorization response parameters encoded as HTML form values, as
+specified by [OAuth 2.0 Form Post Response Mode](https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html).
+
 ## [1.6.1] - 2021-09-24
 ### Fixed
 - Error in cases where the authorization server returns a successful access
@@ -20,4 +26,5 @@ a state store capable of storing application-level state.
 persisted in the session by state store.
 - `callbackURL` property added to metadata passed to state store.
 
-[Unreleased]: https://github.com/jaredhanson/passport-oauth2/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/jaredhanson/passport-oauth2/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/authnomicon/federated/compare/v1.6.1...v1.7.0
