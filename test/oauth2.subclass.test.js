@@ -247,7 +247,7 @@ describe('OAuth2Strategy subclass', function() {
 
   }); // that overrides parseErrorResponse
 
-  describe('that overrides handleOAuthAccessTokenReponse', function () {
+  describe('that overrides handleOAuthAccessTokenResponse', function () {
     var options = {
       authorizationURL: 'https://www.example.com/oauth2/authorize',
       tokenURL: 'https://www.example.com/oauth2/token',
@@ -261,7 +261,7 @@ describe('OAuth2Strategy subclass', function() {
     }
     util.inherits(BarOAuth2Strategy, OAuth2Strategy);
 
-    BarOAuth2Strategy.prototype.handleOAuthAccessTokenReponse = function(accessToken, refreshToken, params, done) {
+    BarOAuth2Strategy.prototype.handleOAuthAccessTokenResponse = function(accessToken, refreshToken, params, done) {
       done(new Error('this needs to be defined in each test'));
     }
 
@@ -285,13 +285,13 @@ describe('OAuth2Strategy subclass', function() {
     describe('failure', function () {
       var err;
 
-      describe('handleOAuthAccessTokenReponse ecounters an exception', function () {
+      describe('handleOAuthAccessTokenResponse encounters an exception', function () {
         beforeEach(function(done) {
           strategy._verify = function (at, rt, params, done) {
             return done(new Error('verify callback should not be called'));
           }
 
-          strategy.__proto__.handleOAuthAccessTokenReponse = function(at, rt, p, done) { done(new Error()); }
+          strategy.__proto__.handleOAuthAccessTokenResponse = function(at, rt, p, done) { done(new Error()); }
 
           chai.passport.use(strategy)
             .error(function(e) {
@@ -309,11 +309,11 @@ describe('OAuth2Strategy subclass', function() {
           expect(err).to.be.an.instanceof(Error)
           expect(err.message).to.equal('Failed to handle oauth access token response');
         });
-      }); // exception encountered in handleOAuthAccessTokenReponse
+      }); // exception encountered in handleOAuthAccessTokenResponse
 
-      describe('handleOAuthAccessTokenReponse does not pass an accessToken back', function () {
+      describe('handleOAuthAccessTokenResponse does not pass an accessToken back', function () {
         beforeEach(function(done) {
-          strategy.__proto__.handleOAuthAccessTokenReponse = function(at, rt, p, done) {
+          strategy.__proto__.handleOAuthAccessTokenResponse = function(at, rt, p, done) {
             done();
           }
 
@@ -333,8 +333,8 @@ describe('OAuth2Strategy subclass', function() {
           expect(err).to.be.an.instanceof(Error)
           expect(err.message).to.equal('Failed to obtain access token');
         });
-      }); // failed to pass back accessToken handleOAuthAccessTokenReponse
-    });
+      }); // failed to pass back accessToken handleOAuthAccessTokenResponse
+    }); // failed
 
     describe('success', function () {
       var user
@@ -350,17 +350,17 @@ describe('OAuth2Strategy subclass', function() {
           next(null, profile, params)
         }
 
-        strategy.__proto__.handleOAuthAccessTokenReponse = function(at, rt, p, done) {
-          expect(at).to.eql('at');
-          expect(rt).to.eql('rt');
-          expect(p).to.eql({ token_type: 'test' });
+        strategy.__proto__.handleOAuthAccessTokenResponse = function(accesToken, refreshToken, params, done) {
+          expect(accesToken).to.eql('at');
+          expect(refreshToken).to.eql('rt');
+          expect(params).to.eql({ token_type: 'test' });
 
           process.nextTick(function () {
-            at = 'newAt';
-            rt = 'newRt';
-            p.token_type = 'new token type';
+            accesToken = 'newAt';
+            refreshToken = 'newRt';
+            params.token_type = 'new token type';
 
-            done(null, at, rt, p);
+            done(null, accesToken, refreshToken, params);
           });
         }
 
@@ -389,9 +389,7 @@ describe('OAuth2Strategy subclass', function() {
             req.query = { code: 'code' };
           })
           .authenticate();
-      }); // failed to pass back accessToken handleOAuthAccessTokenReponse
-    });
-
-  }); // that overrides handleOAuthAccessTokenReponse
-
+      }); // failed to pass back accessToken handleOAuthAccessTokenResponse
+    }); // success
+  }); // that overrides handleOAuthAccessTokenResponse
 });
