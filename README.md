@@ -45,6 +45,10 @@ list so other people can find it.
 
     $ npm install passport-oauth2
 
+## Publish package to cloudsmit
+Login to cloudsmith
+```npm publish --access public```
+
 ## Usage
 
 #### Configure Strategy
