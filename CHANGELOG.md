@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2024-02-02
+### Fixed
+- Fixed intermittent "Failed to obtain access token" error by updating `oauth`
+dependency from 0.9.x to 0.10.x.  This error seems to occur more frequently on
+fast connections which get reset after receiving an access token response.
+
 ## [1.7.0] - 2023-03-02
 ### Added
 
