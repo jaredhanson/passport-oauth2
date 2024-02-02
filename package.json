@@ -38,7 +38,7 @@
   "main": "./lib",
   "dependencies": {
     "base64url": "3.x.x",
-    "oauth": "0.9.x",
+    "oauth": "0.10.x",
     "passport-strategy": "1.x.x",
     "uid2": "0.0.x",
     "utils-merge": "1.x.x"
