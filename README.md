@@ -71,6 +71,16 @@ passport.use(new OAuth2Strategy({
 ));
 ```
 
+Additionally `oauth2` can return the whole result of the oauth2 request (excluding `refresh_token`) as a 3rd argument to verify.
+```js
+function(accessToken, refreshToken, additionalParams, profile, cb) {
+  User.findOrCreate({ exampleId: profile.id }, function (err, user) {
+    return cb(err, user);
+  });
+}
+```
+
+
 #### Authenticate Requests
 
 Use `passport.authenticate()`, specifying the `'oauth2'` strategy, to
