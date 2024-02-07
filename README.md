@@ -91,6 +91,82 @@ app.get('/auth/example/callback',
   });
 ```
 
+## Strategy Options
+
+#### authorizationURL
+REQUIRED<br>
+`{ authorizationURL: string }`<br>
+URL used to obtain an authorization grant
+
+#### tokenURL
+REQUIRED<br>
+`{ tokenURL: string }`<br>
+URL used to obtain an access token
+
+#### clientID
+REQUIRED<br>
+`{ clientID: string }`<br>
+The client identifier issued to the client by the OAuth 2.0 service.
+
+#### clientSecret
+REQUIRED<br>
+`{ clientSecret: string }`<br>
+The client secret issued to the client by the OAuth 2.0 service.
+
+#### callbackURL
+OPTIONAL<br>
+`{ callbackURL: string }`<br>
+URL to which the service provider will redirect the user after obtaining authorization. The URL can be relative or fully qualified; when relative, the original URL of the authorization request will be prepended to the relative URL.
+
+#### customHeaders
+OPTIONAL<br>
+`{ customHeaders: Object }`<br>
+Custom headers you can pass along with the authorization request.
+
+#### passReqToCallback
+OPTIONAL<br>
+`{ passReqToCallback: boolean }`<br>
+When set to `true`, the first argument sent to the verify callback is the request, `http.IncomingMessage`, (default: `false`)
+
+#### proxy
+OPTIONAL<br>
+`{ proxy: boolean }`<br>
+Used when resolving a relative callbackURL. When set to `true`, `req.headers['x-forwarded-proto']` and `req.headers['x-forwarded-host']` will be used otherwise `req.connection.encrypted` and `req.headers.host` will be used.
+
+_Note_: if your webserver, e.g. `Express`, provides `req.app.get` and the value `req.app.get('trust proxy')` is set, proxy option will automatically be set to `true`.
+
+#### scope
+OPTIONAL<br>
+`{ scope: Array|string }`<br>
+The scope of the access request made by the client of the OAuth 2.0 service. The scope is a list one or more strings, which are defined by the OAuth 2.0 service.
+
+When the scope is provided as a list of strings, each string should be separated by a single space, as per the OAuth 2.0 spec. When the scope is provided as an Array of strings, each array element will be joined by the scopeSeparator.
+
+#### scopeSeparator
+OPTIONAL<br>
+`{ scopeSeparator: string }`<br>
+The separator used to join the scope strings when the `scope` is provided as an Array (default: `single space`).
+
+#### sessionKey
+OPTIONAL<br>
+`{ sessionKey: string }`<br>
+The key to use to store the state string when the `state` option is set to `true`. (default: 'oauth2:' + url.parse(options.authorizationURL).hostname)
+
+#### skipUserProfile
+OPTIONAL<br>
+`{ skipUserProfile: boolean }`<br>
+Whether or not to return the user profile information of the user granting authorization to their account information.
+
+#### state
+OPTIONAL<br>
+`{ state: boolean }`<br>
+When set to `true`, a state string with be created, stored, sent along with the authentication request and verified when the response from the OAuth 2.0 service is received.
+
+#### store
+OPTIONAL<br>
+`{ store: Function }`<br>
+The store to use when storing the state string (default: `SessionStore`, `req.session[sessionKey]`, requires session middleware such as `express-session`). See the [NullStore](lib/state/null.js) for an example of a store function.
+
 ## Related Modules
 
 - [passport-oauth1](https://github.com/jaredhanson/passport-oauth1) — OAuth 1.0 authentication strategy
